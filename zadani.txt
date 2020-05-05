@@ -1,9 +1,3 @@
-# SServer
-Simple HTTP Server or simply: **Simple Server**
-
-Autor: Ladislav Floriš
-
-## Zadání
 HTTP server
 
 Úkolem je naprogramovat jednoduchý HTTP server s podporou různých generátorů obsahu. Generátor obsahu musí podporovat:
@@ -30,12 +24,3 @@ Kde lze využít polymorfismus? (doporučené)
 - Logování: na konzoli, do souboru, do databáze, ...
 - Styl logování: jednoduchá hlavička, kompletní požadavek (např. pouze pro chybové stavy), statistika přístupů, ...
 
-## Specifikace
-
-
-### Popis Polymorfizmu
-Polymorfizmus použitý v class `File` 
-
-Polymorfizmus použitý v class `Logger`
-
-Polymorfizmus použitý v class `Logger`
