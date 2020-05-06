@@ -10,6 +10,6 @@
 /// Base virtual class for handling files and which is derived by other classes for specific file types
 class File {
 public:
-    /// Pure virtual function for getting extension for the speciffic file
+    /// Pure virtual function for getting extension for the specific file
     virtual std::string GetExtension() = 0;
 };

@@ -4,15 +4,20 @@
 */
 
 #include "CServer.h"
+#include "Configuration.h"
+#include <string>
+#include <sys/socket.h>
+#include <netinet/tcp.h>
 
 using namespace std;
 
-bool CServer::Startup() {
+
+bool CServer::Startup(const Configuration & config) {
     // todo
 
-    // Read configuration
 
     // Set up log
+
 
     // etc.
 

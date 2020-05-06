@@ -5,6 +5,10 @@
 
 #pragma once
 
+#include <sys/socket.h>
+#include "Configuration.h"
+#include <netinet/tcp.h>
+
 /// Main class responsible for server processes and configuration
 class CServer {
 public:
@@ -23,7 +27,7 @@ public:
 
     /// Method to be called when server is started, responsible for configurating the server,
     /// setting up logging, ...
-    bool Startup();
+    bool Startup(const Configuration &);
 
     /// To be called when server should start accepting requests
     int Listen();
