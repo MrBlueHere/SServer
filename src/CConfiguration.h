@@ -8,19 +8,23 @@
 #include <string>
 
 /// Class responsible for handling reading and storing server configuration
-class Configuration {
+class CConfiguration {
 public:
-    Configuration() = default;
+    CConfiguration() = default;
 
     // TODO: Copy constructor
     // TODO: = operator
     // TODO: Destructor
 
-    bool ReadConfigurationFromFile(const std::string &src);
+    bool ReadConfigurationFromFile(const std::string &);
 
-    std::string ipAddress;
-    uint port;
+    unsigned int IpAddressFromString(const std::string &) const;
+
+    std::string ipAddress{"127.0.0.1"};
+    uint port{8080};
     std::string shutdownUrl;
+    uint maxConnections{10};
+
     /// Where should we log? (console, file, database, etc.)
     std::string logType;
 };

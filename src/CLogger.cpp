@@ -3,6 +3,6 @@
 * @date 05.05.20
 */
 
-#include "Logger.h"
+#include "CLogger.h"
 
 using namespace std;

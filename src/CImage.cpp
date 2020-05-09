@@ -3,6 +3,6 @@
 * @date 06.05.20
 */
 
-#include "Image.h"
+#include "CImage.h"
 
 using namespace std;

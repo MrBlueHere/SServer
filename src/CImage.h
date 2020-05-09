@@ -5,10 +5,10 @@
 
 #pragma once
 
-#include "File.h"
+#include "CFIle.h"
 
 /// Class representing an image file
-class Image : public File {
+class CImage : public CFIle {
 
 };
 

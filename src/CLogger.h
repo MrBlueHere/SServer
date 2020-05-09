@@ -6,7 +6,7 @@
 #pragma once
 
 /// Singleton responsible for logging, handling different types of logs
-class Logger {
+class CLogger {
 
 };
 

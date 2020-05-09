@@ -1,9 +1,9 @@
 # SServer
 Simple HTTP Server or simply: **Simple Server**
 
-Autor: Ladislav Floriš
+Author: Ladislav Floriš
 
-## Zadání
+## Original assignment
 HTTP server
 
 Úkolem je naprogramovat jednoduchý HTTP server s podporou různých generátorů obsahu. Generátor obsahu musí podporovat:
@@ -30,10 +30,15 @@ Kde lze využít polymorfismus? (doporučené)
 - Logování: na konzoli, do souboru, do databáze, ...
 - Styl logování: jednoduchá hlavička, kompletní požadavek (např. pouze pro chybové stavy), statistika přístupů, ...
 
-## Specifikace
+## Specification
+I will create a Simple HTTP Server serving static files (html, images and other) as well as running executable scripts.
 
+It will be possible to customize server configuration by modifying a config file (logic implemented in `CConfiguration` class).
 
-### Popis Polymorfizmu
+Each connection will get a dedicated thread (for simplicity purposes, we won't use thread pools or in any way reuse
+already created threads) to make serving multiple clients faster.
+
+### Polymorphism 
 Polymorfizmus použitý v class `File` 
 
 Polymorfizmus použitý v class `Logger`

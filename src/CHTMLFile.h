@@ -5,10 +5,10 @@
 
 #pragma once
 
-#include "File.h"
+#include "CFIle.h"
 
 /// Class representing a file containing HTML
-class HTMLFile : public File {
+class CHTMLFile : public CFIle {
 
 };
 
