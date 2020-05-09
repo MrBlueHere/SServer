@@ -1,5 +1,6 @@
 #include <iostream>
 #include "CServer.h"
+#include "logging/LogType.h"
 
 int main(int argc, char **argv) {
     CServer server{};
@@ -10,6 +11,7 @@ int main(int argc, char **argv) {
     config.ipAddress = "127.0.0.1";
     config.port = 8080;
     config.maxConnections = 20;
+    config.logType = Console;
 
     if (server.Startup(config))
         return server.Listen();

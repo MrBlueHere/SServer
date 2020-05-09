@@ -6,6 +6,7 @@
 #pragma once
 
 #include <string>
+#include "logging/LogType.h"
 
 /// Class responsible for handling reading and storing server configuration
 class CConfiguration {
@@ -26,5 +27,6 @@ public:
     uint maxConnections{10};
 
     /// Where should we log? (console, file, database, etc.)
-    std::string logType;
+    LogType logType{Console};
+    std::string logFile{""};
 };

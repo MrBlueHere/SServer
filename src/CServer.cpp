@@ -5,6 +5,8 @@
 
 #include "CServer.h"
 #include "CConfiguration.h"
+#include "logging/CConsoleLogger.h"
+#include "logging/CFileLogger.h"
 #include <string>
 #include <iostream>
 #include <cstring>
@@ -37,9 +39,16 @@ bool CServer::Startup(const CConfiguration & config) {
     memset(m_address.sin_zero, '\0', sizeof m_address.sin_zero);
 
     // Set up log
-
-
-    // etc.
+    if (config.logType == Console) {
+        m_logger = make_unique<CConsoleLogger>(CConsoleLogger());
+    }
+    else if (config.logType == File) {
+        m_logger = make_unique<CFileLogger>(CFileLogger(config.logFile));
+    }
+    // Unsupported
+    else {
+        return false;
+    }
 
     return true;
 }
@@ -55,8 +64,7 @@ int CServer::Listen() {
         exit(EXIT_FAILURE);
     }
 
-    // TODO: Take second argument from config
-    if (listen(m_masterSocket, 10) < 0)
+    if (listen(m_masterSocket, m_maxConnections) < 0)
     {
         perror("In listen");
         exit(EXIT_FAILURE);

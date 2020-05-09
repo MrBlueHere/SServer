@@ -7,7 +7,9 @@
 
 #include <sys/socket.h>
 #include "CConfiguration.h"
+#include "logging/CLogger.h"
 #include <netinet/in.h>
+#include <memory>
 
 /// Main class responsible for server processes and configuration
 class CServer {
@@ -41,6 +43,9 @@ private:
     /// Signal that server should shut down
     bool m_awaitingShutdown{};
 
+    std::unique_ptr<CLogger> m_logger;
+
     sockaddr_in m_address{};
     int m_masterSocket{0};
+    int m_maxConnections{10};
 };

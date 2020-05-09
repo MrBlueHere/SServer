@@ -33,7 +33,7 @@ unsigned int CConfiguration::IpAddressFromString(const std::string & addr) const
         string substr;
         getline(stream, substr, '.' );
         int num = stoi(substr, nullptr, 10);
-        result += (num * pow(2, power));
+        result += (unsigned  int)(num * pow(2, power));
         power += 8;
     }
     return result;
