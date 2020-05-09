@@ -39,8 +39,9 @@ Each connection will get a dedicated thread (for simplicity purposes, we won't u
 already created threads) to make serving multiple clients faster.
 
 ### Polymorphism 
-Polymorfizmus použitý v class `File` 
+Polymorphism is used in class `CLogger`. `CLogger` is an abstract class with 2 derived classes `CConsoleLogger` and `CFileLogger`
+which implement logging to console and file respectively. `CServer` class instantiates an appropriate logger class in `Startup` 
+based on the configuration and then uses method `Log` to log messages irrespective of the instantiated logger.
 
-Polymorfizmus použitý v class `Logger`
+Polymorphism used in class `CFile` 
 
-Polymorfizmus použitý v class `Logger`

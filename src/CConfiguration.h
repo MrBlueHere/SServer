@@ -29,4 +29,6 @@ public:
     /// Where should we log? (console, file, database, etc.)
     LogType logType{Console};
     std::string logFile{""};
+
+    std::string
 };

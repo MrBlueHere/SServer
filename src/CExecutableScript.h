@@ -5,7 +5,7 @@
 
 #pragma once
 
-/// Class for executable files responsible for managing and executing the files
+/// Class for executable files responsible for managing and executing the executables
 class CExecutableScript {
 
 };

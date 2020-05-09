@@ -17,6 +17,7 @@ int main(int argc, char **argv) {
         return server.Listen();
 
     // Server failed to start
-    // log reason, exception, ...
+    perror("Server failed to start");
+
     return 1;
 }
