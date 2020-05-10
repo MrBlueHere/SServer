@@ -36,6 +36,8 @@ public:
 
     void HandleConnection(void *);
 
+    std::string MapUriToPath(const std::string & uri);
+
     /// Handle server shutdown
     void Shutdown();
 
@@ -48,4 +50,5 @@ private:
     sockaddr_in m_address{};
     int m_masterSocket{0};
     int m_maxConnections{10};
+    static const int m_bufferSize{4096};
 };

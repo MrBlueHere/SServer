@@ -16,8 +16,7 @@ bool CConfiguration::ReadConfigurationFromFile(const std::string &src) {
 
     // initialize member variables
 
-
-    return false;
+    return true;
 }
 
 /// TODO: Support IPv6

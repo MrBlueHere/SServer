@@ -32,7 +32,6 @@ bool CServer::Startup(const CConfiguration & config) {
 
     // Creating socket file descriptor
     m_masterSocket = socket(AF_INET, SOCK_STREAM, 0);
-
     if (m_masterSocket == 0)
     {
         m_logger->Log("Failed to create a master socket");
@@ -93,14 +92,20 @@ void CServer::HandleConnection(void * clientSocket) {
     delete (int *)clientSocket;
 
     string hello = "HTTP/1.1 200 OK\nContent-Type: text/plain\nContent-Length: 12\n\nHello world!";
-    char buffer[1024] = {0};
+    char buffer[m_bufferSize] = {0};
 
     read( socket , buffer, 30000);
     cout << buffer << endl;
 
+    string cmd, uri, proto;
+
     write(socket , hello.c_str(), hello.size());
-    printf("------------------Hello message sent-------------------");
+    cout << "------------------Hello sent-------------------" << endl;
     close(socket);
+}
+
+std::string CServer::MapUriToPath(const std::string &uri) {
+    return std::__cxx11::string();
 }
 
 void CServer::Shutdown() {

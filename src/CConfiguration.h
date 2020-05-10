@@ -30,5 +30,5 @@ public:
     LogType logType{Console};
     std::string logFile{""};
 
-    std::string
+    std::string serverDirectory;
 };

@@ -32,6 +32,7 @@ Kde lze využít polymorfismus? (doporučené)
 
 ## Specification
 I will create a Simple HTTP Server serving static files (html, images and other) as well as running executable scripts.
+The server will support HTTP Version 1.1 and it will be limited to GET requests only. 
 
 It will be possible to customize server configuration by modifying a config file (logic implemented in `CConfiguration` class).
 
@@ -43,5 +44,5 @@ Polymorphism is used in class `CLogger`. `CLogger` is an abstract class with 2 d
 which implement logging to console and file respectively. `CServer` class instantiates an appropriate logger class in `Startup` 
 based on the configuration and then uses method `Log` to log messages irrespective of the instantiated logger.
 
-Polymorphism used in class `CFile` 
-
+Polymorphism used in class `CFile`. `CFile` is a base class from which other classes for speciffic files will be derived
+(`CHTMLFile`, `CImage`, `CExecutable`).
