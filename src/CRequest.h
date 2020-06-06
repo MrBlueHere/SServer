@@ -22,7 +22,7 @@ public:
     ~CRequest() = default;
 
     /// Parses the request and returns a valid CRequest or throws exception if request doesn't have a correct format
-    CRequest ParseRequest(const std::string & rawRequest);
+    static CRequest ParseRequest(const std::string & rawRequest);
 
     std::string Method;
     std::string Host;

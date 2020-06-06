@@ -15,7 +15,7 @@ HTTP server
 Server musí implementovat:
 
 1. načítání konfiguračního souboru
-2. parametry naslouchání na síti (IP adresa, port)
+2. parametry naslouchání na síti (IP adresa, m_port)
 3. omezení na práci s konkrétním adresářem
 4. log přenosů (kam se má ukládat, v jakém formátu, jak má vypadat hlavička každého záznamu, ...)
 5. vypnutí serveru na (konfigurovatelné) URL adrese

@@ -1,0 +1,7 @@
+IPAddress=127.0.0.1
+Port=8080
+ShutdownUrl=shutdown
+MaxConnections=20
+LogType=Console
+LogFile=log.txt
+ServerDirectory=dir

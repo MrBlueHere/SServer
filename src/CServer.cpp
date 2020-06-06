@@ -7,6 +7,7 @@
 #include "CConfiguration.h"
 #include "logging/CConsoleLogger.h"
 #include "logging/CFileLogger.h"
+#include "CRequest.h"
 #include <string>
 #include <iostream>
 #include <cstring>
@@ -23,11 +24,11 @@ using namespace std;
 
 bool CServer::Startup(const CConfiguration & config) {
     // Set up log
-    if (config.logType == Console) {
+    if (config.m_logType == Console) {
         m_logger = make_unique<CConsoleLogger>(CConsoleLogger());
     }
-    else if (config.logType == File) {
-        m_logger = make_unique<CFileLogger>(CFileLogger(config.logFile));
+    else if (config.m_logType == File) {
+        m_logger = make_unique<CFileLogger>(CFileLogger(config.m_logFile));
     }
 
     // Creating socket file descriptor
@@ -39,8 +40,8 @@ bool CServer::Startup(const CConfiguration & config) {
     }
 
     m_address.sin_family = AF_INET;
-    m_address.sin_addr.s_addr = config.IpAddressFromString(config.ipAddress);
-    m_address.sin_port = htons( config.port );
+    m_address.sin_addr.s_addr = config.IpAddressFromString(config.m_ipAddress);
+    m_address.sin_port = htons( config.m_port );
     memset(m_address.sin_zero, '\0', sizeof m_address.sin_zero);
 
     return true;
@@ -97,7 +98,15 @@ void CServer::HandleConnection(void * clientSocket) {
     read( socket , buffer, 30000);
     cout << buffer << endl;
 
+    CRequest request;
     string cmd, uri, proto;
+    try {
+        request = CRequest::ParseRequest(buffer);
+    }
+    catch (exception & e) {
+        // log exception
+        return;
+    }
 
     write(socket , hello.c_str(), hello.size());
     cout << "------------------Hello sent-------------------" << endl;

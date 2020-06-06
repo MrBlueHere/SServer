@@ -7,28 +7,35 @@
 
 #include <string>
 #include "logging/LogType.h"
+#include <set>
 
 /// Class responsible for handling reading and storing server configuration
 class CConfiguration {
 public:
-    CConfiguration() = default;
+    explicit CConfiguration() = default;
 
     // TODO: Copy constructor
     // TODO: = operator
     // TODO: Destructor
 
-    bool ReadConfigurationFromFile(const std::string &);
+    void ReadConfigurationFromFile(const std::string &);
 
     unsigned int IpAddressFromString(const std::string &) const;
 
-    std::string ipAddress{"127.0.0.1"};
-    uint port{8080};
-    std::string shutdownUrl;
-    uint maxConnections{10};
+    void SetConfigParam(const std::string & arg, std::string & val);
+
+    std::string m_ipAddress{"127.0.0.1"};
+    uint m_port{8080};
+    std::string m_shutdownUrl;
+    uint m_maxConnections{10};
 
     /// Where should we log? (console, file, database, etc.)
-    LogType logType{Console};
-    std::string logFile{""};
+    LogType m_logType{Console};
+    std::string m_logFile{""};
 
-    std::string serverDirectory;
+    std::string m_serverDirectory;
+
+    const std::set<std::string> m_validParameters {
+        "IPAddress", "Port", "ShutdownUrl", "MaxConnections", "LogType", "LogFile", "ServerDirectory"
+    };
 };
