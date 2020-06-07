@@ -98,13 +98,13 @@ void CServer::HandleConnection(void * clientSocket) {
     string hello = "HTTP/1.1 200 OK\nContent-Type: text/plain\nContent-Length: 12\n\nHello world!";
     char buffer[m_bufferSize] = {0};
 
-    read( socket , buffer, 30000);
+    read( socket , buffer, m_bufferSize);
     cout << buffer << endl;
 
-    CRequest request;
     string cmd, uri, proto;
+    CRequest request;
     try {
-        request = CRequest::ParseRequest(buffer);
+        request.ParseRequest(buffer);
     }
     catch (exception & e) {
         // log exception
