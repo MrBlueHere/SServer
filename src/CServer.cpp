@@ -21,9 +21,13 @@
 
 using namespace std;
 
+CServer::CServer()
+: m_awaitingShutdown(false), m_masterSocket(0), m_maxConnections(10)
+{ }
+
+const int CServer::m_bufferSize(4096);
 
 bool CServer::Startup(const CConfiguration & config) {
-    // Set up log
     if (config.m_logType == Console) {
         m_logger = make_unique<CConsoleLogger>(CConsoleLogger());
     }
@@ -31,7 +35,6 @@ bool CServer::Startup(const CConfiguration & config) {
         m_logger = make_unique<CFileLogger>(CFileLogger(config.m_logFile));
     }
 
-    // Creating socket file descriptor
     m_masterSocket = socket(AF_INET, SOCK_STREAM, 0);
     if (m_masterSocket == 0)
     {
@@ -122,3 +125,4 @@ void CServer::Shutdown() {
 
     m_awaitingShutdown = true;
 }
+

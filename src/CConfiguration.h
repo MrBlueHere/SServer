@@ -12,7 +12,7 @@
 /// Class responsible for handling reading and storing server configuration
 class CConfiguration {
 public:
-    explicit CConfiguration() = default;
+    CConfiguration();
 
     // TODO: Copy constructor
     // TODO: = operator
@@ -24,18 +24,16 @@ public:
 
     void SetConfigParam(const std::string & arg, std::string & val);
 
-    std::string m_ipAddress{"127.0.0.1"};
-    uint m_port{8080};
+    std::string m_ipAddress;
+    uint m_port;
     std::string m_shutdownUrl;
-    uint m_maxConnections{10};
+    uint m_maxConnections;
 
     /// Where should we log? (console, file, database, etc.)
-    LogType m_logType{Console};
-    std::string m_logFile{""};
+    LogType m_logType;
+    std::string m_logFile;
 
     std::string m_serverDirectory;
 
-    const std::set<std::string> m_validParameters {
-        "IPAddress", "Port", "ShutdownUrl", "MaxConnections", "LogType", "LogFile", "ServerDirectory"
-    };
+    const std::set<std::string> m_validParameters;
 };

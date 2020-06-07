@@ -14,8 +14,7 @@
 /// Main class responsible for server processes and configuration
 class CServer {
 public:
-    /// Default constructor
-    CServer() = default;
+    CServer();
 
     /// Forbidden copy constructor
     CServer(const CServer &) = delete;
@@ -43,12 +42,12 @@ public:
 
 private:
     /// Signal that server should shut down
-    bool m_awaitingShutdown{};
+    bool m_awaitingShutdown;
 
     std::unique_ptr<CLogger> m_logger;
 
-    sockaddr_in m_address{};
-    int m_masterSocket{0};
-    int m_maxConnections{10};
-    static const int m_bufferSize{4096};
+    sockaddr_in m_address;
+    int m_masterSocket;
+    int m_maxConnections;
+    static const int m_bufferSize;
 };

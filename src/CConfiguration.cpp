@@ -11,6 +11,11 @@
 
 using namespace std;
 
+CConfiguration::CConfiguration()
+: m_ipAddress("127.0.0.1"), m_port(8080), m_maxConnections(10), m_logType(Console),
+  m_validParameters( {"IPAddress", "Port", "ShutdownUrl", "MaxConnections", "LogType", "LogFile", "ServerDirectory"} )
+{ }
+
 void CConfiguration::ReadConfigurationFromFile(const std::string &configFilePath) {
     ifstream configFile;
     configFile.open(configFilePath);
@@ -101,3 +106,5 @@ void CConfiguration::SetConfigParam(const string &arg, string &val) {
     string var = oss.str();
     throw runtime_error(var);
 }
+
+
