@@ -8,27 +8,7 @@ HTTP server
 
 Úkolem je naprogramovat jednoduchý HTTP server s podporou různých generátorů obsahu. Generátor obsahu musí podporovat:
 
-1. výpis obsahu adresářeclass CRequest {
-public:
-    /// Default constructor
-    CRequest() = default;
-
-    /// Default copy constructor
-    CRequest(const CRequest &) = default;
-
-    /// Default copy assignment
-    CRequest & operator = (const CRequest &) = default;
-
-    /// Default destructor
-    ~CRequest() = default;
-
-    /// Parses the request and returns a valid CRequest or throws exception if request doesn't have a correct format
-    static CRequest ParseRequest(const std::string & rawRequest);
-
-    std::string Method;
-    std::string Host;
-    std::string Version;
-}
+1. výpis obsahu adresáře
 2. konkrétní html stránka (statický obsah)
 3. externí skript nebo program
 

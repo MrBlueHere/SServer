@@ -17,6 +17,7 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <netinet/tcp.h>
+#include <experimental/filesystem>
 
 
 using namespace std;
@@ -26,6 +27,19 @@ CServer::CServer()
 { }
 
 const int CServer::m_bufferSize(4096);
+
+const std::map<std::string, std::string> CServer::m_mimeTypes = {
+        {"html", "text/html;charset=utf-8"},
+        {"htm","text/html;charset=utf-8"},
+        {"jpg","image/jpeg"},
+        {"png","image/png"},
+        {"svg","image/svg"},
+        {"gif","image/gif"},
+        {"css","text/css;charset=utf-8"},
+        {"js","text/javascript"},
+        {"json","application/json"},
+        {"xml","text/xml"}
+};
 
 bool CServer::Startup(const CConfiguration & config) {
     if (config.m_logType == Console) {
@@ -105,15 +119,45 @@ void CServer::HandleConnection(void * clientSocket) {
     CRequest request;
     try {
         request.ParseRequest(buffer);
+
+        string contentType = GetContentType(request.m_uri);
+        auto fst = experimental::filesystem::status(request.m_uri);
+
+        if (experimental::filesystem::is_directory(fst)) {
+            // There should be "/" at the end (maybe redirect)
+            // List directory
+        }
+        else if (experimental::filesystem::is_regular_file(fst)) {
+
+        }
+        else {
+            throw std::runtime_error("File type not supported");
+        }
     }
     catch (exception & e) {
         // log exception
+        close(socket);
         return;
     }
 
     write(socket , hello.c_str(), hello.size());
     cout << "------------------Hello sent-------------------" << endl;
     close(socket);
+}
+
+string CServer::GetContentType(const string& path) {
+    auto pos = path.rfind('.');
+    if (pos == std::string::npos)
+        return "application/octet-stream";
+
+    string ext = path.substr(pos + 1);
+
+    auto mimeType = m_mimeTypes.find(ext);
+    if( mimeType == m_mimeTypes.end() ) {
+        return "application/octet-stream";
+    } else {
+        return mimeType->second;
+    }
 }
 
 std::string CServer::MapUriToPath(const std::string &uri) {

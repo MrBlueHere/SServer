@@ -10,6 +10,7 @@
 #include "logging/CLogger.h"
 #include <netinet/in.h>
 #include <memory>
+#include <map>
 
 /// Main class responsible for server processes and configuration
 class CServer {
@@ -35,6 +36,8 @@ public:
 
     void HandleConnection(void *);
 
+    std::string GetContentType(const std::string & path);
+
     std::string MapUriToPath(const std::string & uri);
 
     /// Handle server shutdown
@@ -50,4 +53,5 @@ private:
     int m_masterSocket;
     int m_maxConnections;
     static const int m_bufferSize;
+    static const std::map<std::string, std::string> m_mimeTypes;
 };
