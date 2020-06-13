@@ -4,14 +4,14 @@
 */
 
 #include "CStaticFile.h"
-#include <experimental/filesystem>
+#include <filesystem>
 #include <sys/sendfile.h>
 
 using namespace std;
 
 /// Sends response using sendfile() system call to avoid copying
 void CStaticFile::SendResponse(int socket, const string & path) {
-    int size = experimental::filesystem::file_size(path);
+    int size = filesystem::file_size(path);
 
     int posix_handle = fileno(::fopen(path.c_str(), "r"));
 

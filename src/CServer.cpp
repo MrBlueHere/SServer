@@ -20,6 +20,7 @@
 #include <netinet/in.h>
 #include <netinet/tcp.h>
 #include <filesystem>
+namespace fs = std::filesystem;
 
 using namespace std;
 
@@ -122,38 +123,47 @@ void CServer::HandleConnection(void * clientSocket) {
     try {
         request.ParseRequest(buffer);
 
-        string path = MapUriToPath(request.m_uri);
-
+        string rawPath = MapUriToPath(request.m_uri);
+        fs::path path (rawPath.c_str());
         string contentType = GetContentType(path);
-        auto status = filesystem::status(path.c_str());
 
-        // Directory, it's content should be returned
-        if (filesystem::is_directory(status)) {
-            // There should be "/" at the end (maybe redirect)
-            // List directory
-        }
-        // Regular static files (images, JS, CSS, ...)
-        else if (experimental::filesystem::is_regular_file(status)) {
-            int size = experimental::filesystem::file_size(path);
+        if (fs::exists(path)) {
+            // Directory, it's content should be returned
+            if (fs::is_directory(path)) {
+                // There should be "/" at the end (maybe redirect)
+                // List directory
+                cout << "Is dir" << endl;
+            }
 
-            SendResponse(200, socket, "OK", {
-                    {"Content-Type", contentType},
-                    {"Content-Length", to_string(size)}
-            }, false);
+            // Regular static files (images, JS, CSS, ...)
+            else if (fs::is_regular_file(path)) {
+                auto size = fs::file_size(path);
 
-            responseSent = true;
+                SendResponse(200, socket, "OK", {
+                        {"Content-Type", contentType},
+                        {"Content-Length", to_string(size)}
+                }, false);
 
-            file = make_unique<CStaticFile>(CStaticFile());
-            file->SendResponse(socket, path);
+                responseSent = true;
+
+                file = make_unique<CStaticFile>(CStaticFile());
+                file->SendResponse(socket, path);
+                return;
+            }
+
+            // Unsupported
+            else {
+                throw std::runtime_error("File type not supported");
+            }
         }
         else {
-            throw std::runtime_error("File type not supported");
+            // 404 not found
         }
     }
     catch (exception & e) {
         // log exception
 
-        /// TODO: Send not 404 or 500
+        /// TODO: Send 404 or 500
         if (!responseSent) {
             //SendResponse(404,"Not found");
         }

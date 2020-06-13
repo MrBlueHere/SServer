@@ -4,4 +4,4 @@ ShutdownUrl=shutdown
 MaxConnections=20
 LogType=Console
 LogFile=log.txt
-ServerDirectory=dir
+ServerDirectory=/home/mrblue/Documents/CVUT_FIT/PA2_semestralka/SServer/www
