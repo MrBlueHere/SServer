@@ -1,8 +1,8 @@
 /**
 * @author Ladislav Floriš
-* @date 06.05.20
+* @date 05.05.20
 */
 
-#include "CImage.h"
+#include "CFile.h"
 
 using namespace std;

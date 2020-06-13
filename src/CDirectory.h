@@ -5,10 +5,10 @@
 
 #pragma once
 
-#include "CFIle.h"
+#include "CFile.h"
 
 /// Class representing a directory nested inside the server root directory
-class CDirectory : public CFIle {
+class CDirectory : public CFile {
 
 };
 

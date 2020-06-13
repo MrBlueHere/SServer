@@ -4,9 +4,10 @@
 */
 
 #pragma once
+#include "CFile.h"
 
 /// Class for executable files responsible for managing and executing the executables
-class CExecutableScript {
+class CExecutableScript : CFile {
 
 };
 

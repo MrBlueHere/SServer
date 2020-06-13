@@ -8,6 +8,8 @@
 #include "logging/CConsoleLogger.h"
 #include "logging/CFileLogger.h"
 #include "CRequest.h"
+#include "CFile.h"
+#include "CStaticFile.h"
 #include <string>
 #include <iostream>
 #include <cstring>
@@ -17,8 +19,7 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <netinet/tcp.h>
-#include <experimental/filesystem>
-
+#include <filesystem>
 
 using namespace std;
 
@@ -48,6 +49,8 @@ bool CServer::Startup(const CConfiguration & config) {
     else if (config.m_logType == File) {
         m_logger = make_unique<CFileLogger>(CFileLogger(config.m_logFile));
     }
+
+    m_serverDirectory = config.m_serverDirectory;
 
     m_masterSocket = socket(AF_INET, SOCK_STREAM, 0);
     if (m_masterSocket == 0)
@@ -93,8 +96,6 @@ int CServer::Listen() {
             exit(EXIT_FAILURE);
         }
 
-        // Validate it
-
         // Handler it and assign thread
         int * p_clientSocket = new int(client_socket);
         thread th(&CServer::HandleConnection, this, p_clientSocket);
@@ -115,20 +116,35 @@ void CServer::HandleConnection(void * clientSocket) {
     read( socket , buffer, m_bufferSize);
     cout << buffer << endl;
 
-    string cmd, uri, proto;
     CRequest request;
+    unique_ptr<CFile> file;
+    bool responseSent = false;
     try {
         request.ParseRequest(buffer);
 
-        string contentType = GetContentType(request.m_uri);
-        auto fst = experimental::filesystem::status(request.m_uri);
+        string path = MapUriToPath(request.m_uri);
 
-        if (experimental::filesystem::is_directory(fst)) {
+        string contentType = GetContentType(path);
+        auto status = filesystem::status(path.c_str());
+
+        // Directory, it's content should be returned
+        if (filesystem::is_directory(status)) {
             // There should be "/" at the end (maybe redirect)
             // List directory
         }
-        else if (experimental::filesystem::is_regular_file(fst)) {
+        // Regular static files (images, JS, CSS, ...)
+        else if (experimental::filesystem::is_regular_file(status)) {
+            int size = experimental::filesystem::file_size(path);
 
+            SendResponse(200, socket, "OK", {
+                    {"Content-Type", contentType},
+                    {"Content-Length", to_string(size)}
+            }, false);
+
+            responseSent = true;
+
+            file = make_unique<CStaticFile>(CStaticFile());
+            file->SendResponse(socket, path);
         }
         else {
             throw std::runtime_error("File type not supported");
@@ -136,6 +152,12 @@ void CServer::HandleConnection(void * clientSocket) {
     }
     catch (exception & e) {
         // log exception
+
+        /// TODO: Send not 404 or 500
+        if (!responseSent) {
+            //SendResponse(404,"Not found");
+        }
+
         close(socket);
         return;
     }
@@ -160,8 +182,49 @@ string CServer::GetContentType(const string& path) {
     }
 }
 
-std::string CServer::MapUriToPath(const std::string &uri) {
-    return std::__cxx11::string();
+std::string CServer::MapUriToPath(const std::string &rawUri) {
+    string uri;
+
+    // Ignore the query because server doesn't implement it
+    auto query = rawUri.find('?');
+    if (query != string::npos)
+        uri = rawUri.substr(0, query);
+    else
+        uri = rawUri;
+
+    return m_serverDirectory + uri;
+}
+
+void CServer::SendResponse(int code, int socket, const std::string& message, initializer_list<pair<string, string>> headers, bool closeConnection) {
+    string buffer;
+    auto begin = headers.begin();
+    auto end = headers.end();
+
+    //smaz retezec
+    buffer.clear();
+    buffer.append("HTTP/1.1 ").append(" ");
+
+    //status kod
+    buffer.append(to_string(code));
+
+    //status message a enter
+    buffer.append(" ").append(message).append("\r\n");
+
+    //projet vsechny hlavicky
+    auto x = begin;
+    while (x != end) {
+        buffer.append(x->first).append(": ").append(x->second).append("\r\n");
+        ++x;
+    }
+
+    if (closeConnection)
+        buffer.append("Connection: close\r\n");
+
+    buffer.append("\r\n");
+
+    write(socket, buffer.c_str(), buffer.size());
+
+    /// TODO: Log
 }
 
 void CServer::Shutdown() {
@@ -169,4 +232,3 @@ void CServer::Shutdown() {
 
     m_awaitingShutdown = true;
 }
-

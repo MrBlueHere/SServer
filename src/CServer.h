@@ -44,10 +44,13 @@ public:
     void Shutdown();
 
 private:
+    void SendResponse(int code, int socket, const std::string& msg, std::initializer_list<std::pair<std::string, std::string>> headers, bool closeConnection);
+
     /// Signal that server should shut down
     bool m_awaitingShutdown;
 
     std::unique_ptr<CLogger> m_logger;
+    std::string m_serverDirectory;
 
     sockaddr_in m_address;
     int m_masterSocket;

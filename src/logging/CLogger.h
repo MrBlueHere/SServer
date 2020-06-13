@@ -15,5 +15,3 @@ public:
 
     /// TODO: Overloads for Log method
 };
-
-

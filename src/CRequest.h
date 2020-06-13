@@ -25,6 +25,7 @@ public:
     ~CRequest() = default;
 
     /// Parses the request and returns a valid CRequest or throws exception if request doesn't have a correct format
+    /// or isn't supported
     void ParseRequest(const std::string & rawRequest);
 
     std::string m_method;

@@ -32,7 +32,8 @@ Kde lze využít polymorfismus? (doporučené)
 
 ## Specification
 I will create a Simple HTTP Server serving static files (html, images and other) as well as running executable scripts.
-The server will support HTTP Version 1.1 and it will be limited to GET requests only. 
+The server will support HTTP Version 1.1 and it will be limited to GET requests only.
+Due to usage of system calls like `sendfile()`, it is portable only to Unix/Linux.
 
 It will be possible to customize server configuration by modifying a config file (logic implemented in `CConfiguration` class).
 
