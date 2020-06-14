@@ -6,3 +6,7 @@
 #include "CDirectory.h"
 
 using namespace std;
+
+void CDirectory::SendResponse(int socket, const string &path) {
+
+}

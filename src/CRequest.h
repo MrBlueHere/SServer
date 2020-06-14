@@ -12,9 +12,6 @@ public:
     /// Default constructor
     CRequest() = default;
 
-    /// Constructor accepting the raw request
-    explicit CRequest(const std::string & rawRequest);
-
     /// Default copy constructor
     CRequest(const CRequest &) = default;
 
@@ -26,7 +23,7 @@ public:
 
     /// Parses the request and returns a valid CRequest or throws exception if request doesn't have a correct format
     /// or isn't supported
-    void ParseRequest(const std::string & rawRequest);
+    std::pair<int, std::string> TryParseRequest(const std::string & rawRequest, bool * isValid) noexcept;
 
     std::string m_method;
     std::string m_uri;

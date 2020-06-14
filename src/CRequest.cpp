@@ -12,23 +12,22 @@
 using namespace std;
 
 
-CRequest::CRequest(const string &rawRequest) {
-    ParseRequest(rawRequest);
-}
-
-void CRequest::ParseRequest(const string &rawRequest) {
+pair<int, string> CRequest::TryParseRequest(const string &rawRequest, bool * isValid) noexcept {
     istringstream stream;
     stream.str(rawRequest);
-    string line, headerLine;
 
-    if (stream >> m_method >> m_uri >> m_protocol) {
-        if (m_method != "GET")
-            throw runtime_error("Method Not Allowed");
-        if (m_protocol != "HTTP/1.1")
-            throw runtime_error("Version Not Supported");
+    if (!(stream >> m_method >> m_uri >> m_protocol)) {
+        *isValid = false;
+        return pair<int, string>(400, "Invalid Request");
     }
-    else {
-        throw runtime_error("Invalid Request");
+
+    if (m_method != "GET") {
+        *isValid = false;
+        return pair<int, string>(405, "Method Not Allowed");
+    }
+    if (m_protocol != "HTTP/1.1") {
+        *isValid = false;
+        return pair<int, string>(505, "HTTP Version Not Supported");
     }
 
     // Read the headers while valid, but don't process them
@@ -36,4 +35,7 @@ void CRequest::ParseRequest(const string &rawRequest) {
     /*do {
         getline(stream, line);
     } while (!line.empty());*/
+
+    *isValid = true;
+    return pair<int, string>(200, "OK");
 }

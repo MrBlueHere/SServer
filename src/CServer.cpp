@@ -10,6 +10,8 @@
 #include "CRequest.h"
 #include "CFile.h"
 #include "CStaticFile.h"
+#include "CDirectory.h"
+#include "CExecutableScript.h"
 #include <string>
 #include <iostream>
 #include <cstring>
@@ -61,7 +63,13 @@ bool CServer::Startup(const CConfiguration & config) {
     }
 
     m_address.sin_family = AF_INET;
-    m_address.sin_addr.s_addr = config.IpAddressFromString(config.m_ipAddress);
+    try {
+        m_address.sin_addr.s_addr = config.IpAddressFromString(config.m_ipAddress);
+    }
+    catch(exception & e) {
+        m_logger->Log(e.what());
+        return false;
+    }
     m_address.sin_port = htons( config.m_port );
     memset(m_address.sin_zero, '\0', sizeof m_address.sin_zero);
 
@@ -111,28 +119,42 @@ void CServer::HandleConnection(void * clientSocket) {
     int socket = *(int *)clientSocket;
     delete (int *)clientSocket;
 
-    string hello = "HTTP/1.1 200 OK\nContent-Type: text/plain\nContent-Length: 12\n\nHello world!";
     char buffer[m_bufferSize] = {0};
 
     read( socket , buffer, m_bufferSize);
     cout << buffer << endl;
 
+    // Try to parse request and validate it
     CRequest request;
+    bool isValid = false;
+    auto parseResult = request.TryParseRequest(buffer, &isValid);
+
+    if (!isValid) {
+        SendErrorResponse(parseResult.first, socket, parseResult.second);
+        close(socket);
+        return;
+    }
+
     unique_ptr<CFile> file;
     bool responseSent = false;
-    try {
-        request.ParseRequest(buffer);
 
-        string rawPath = MapUriToPath(request.m_uri);
-        fs::path path (rawPath.c_str());
+    try {
+        string path = MapUriToPath(request.m_uri);
         string contentType = GetContentType(path);
 
         if (fs::exists(path)) {
+
             // Directory, it's content should be returned
             if (fs::is_directory(path)) {
                 // There should be "/" at the end (maybe redirect)
+
                 // List directory
-                cout << "Is dir" << endl;
+                file = make_unique<CDirectory>(CDirectory());
+            }
+
+            // Executable file
+            else if (CExecutableScript::IsValidExecutableFile(path)) {
+                file = make_unique<CExecutableScript>(CExecutableScript());
             }
 
             // Regular static files (images, JS, CSS, ...)
@@ -143,37 +165,33 @@ void CServer::HandleConnection(void * clientSocket) {
                         {"Content-Type", contentType},
                         {"Content-Length", to_string(size)}
                 }, false);
-
                 responseSent = true;
 
                 file = make_unique<CStaticFile>(CStaticFile());
-                file->SendResponse(socket, path);
-                return;
             }
 
             // Unsupported
             else {
                 throw std::runtime_error("File type not supported");
             }
+
+            file->SendResponse(socket, path);
         }
         else {
             // 404 not found
+            throw std::runtime_error("File not found");
         }
     }
     catch (exception & e) {
         // log exception
 
-        /// TODO: Send 404 or 500
         if (!responseSent) {
-            //SendResponse(404,"Not found");
+            SendErrorResponse(404, socket, e.what());
         }
-
         close(socket);
         return;
     }
 
-    write(socket , hello.c_str(), hello.size());
-    cout << "------------------Hello sent-------------------" << endl;
     close(socket);
 }
 
@@ -205,14 +223,28 @@ std::string CServer::MapUriToPath(const std::string &rawUri) {
     return m_serverDirectory + uri;
 }
 
+void CServer::SendErrorResponse(int code, int socket, const string& message) {
+    // Send headers
+    SendResponse(code, socket, message, {
+            {"Content-Type","text/html;charset=utf-8" },
+            {"Allow","GET"}},true);
+
+    ostringstream output;
+    output
+    << "<html><body>"
+    <<"<h1>" << code << " " << message << "</h1><hr>"
+    <<"<p>Powered by SServer written by Ladislav Floriš.</p>"
+    << "</body></html>";
+
+    write(socket, output.str().c_str(), output.str().size());
+}
+
 void CServer::SendResponse(int code, int socket, const std::string& message, initializer_list<pair<string, string>> headers, bool closeConnection) {
     string buffer;
     auto begin = headers.begin();
     auto end = headers.end();
 
-    //smaz retezec
-    buffer.clear();
-    buffer.append("HTTP/1.1 ").append(" ");
+    buffer.append("HTTP/1.1 ");
 
     //status kod
     buffer.append(to_string(code));
@@ -220,11 +252,10 @@ void CServer::SendResponse(int code, int socket, const std::string& message, ini
     //status message a enter
     buffer.append(" ").append(message).append("\r\n");
 
-    //projet vsechny hlavicky
-    auto x = begin;
-    while (x != end) {
-        buffer.append(x->first).append(": ").append(x->second).append("\r\n");
-        ++x;
+    auto header = begin;
+    while (header != end) {
+        buffer.append(header->first).append(": ").append(header->second).append("\r\n");
+        ++header;
     }
 
     if (closeConnection)

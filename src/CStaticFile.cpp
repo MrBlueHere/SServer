@@ -6,6 +6,7 @@
 #include "CStaticFile.h"
 #include <filesystem>
 #include <sys/sendfile.h>
+#include <unistd.h>
 
 using namespace std;
 
@@ -15,11 +16,14 @@ void CStaticFile::SendResponse(int socket, const string & path) {
 
     int posix_handle = fileno(::fopen(path.c_str(), "r"));
 
-    while (size) {
-        auto r = sendfile(socket, posix_handle, nullptr, size);
-        if (r < 1) {
-            throw runtime_error("sendfile failed");
+    if (posix_handle) {
+        while (size) {
+            auto r = sendfile(socket, posix_handle, nullptr, size);
+            if (r < 1) {
+                throw runtime_error("Sending static file failed");
+            }
+            size-=r;
         }
-        size-=r;
+        close(posix_handle);
     }
 }
