@@ -22,6 +22,8 @@
 #include <netinet/in.h>
 #include <netinet/tcp.h>
 #include <filesystem>
+
+#include <arpa/inet.h>
 namespace fs = std::filesystem;
 
 using namespace std;
@@ -62,14 +64,13 @@ bool CServer::Startup(const CConfiguration & config) {
         return false;
     }
 
-    m_address.sin_family = AF_INET;
-    try {
-        m_address.sin_addr.s_addr = config.IpAddressFromString(config.m_ipAddress);
-    }
-    catch(exception & e) {
-        m_logger->Log(e.what());
+    m_address.sin_family = config.m_useIPv6 ? AF_INET6 : AF_INET;
+
+    if (!inet_pton(m_address.sin_family, config.m_ipAddress.c_str(), &(m_address.sin_addr))) {
+        m_logger->Log("Invalid IP address");
         return false;
     }
+
     m_address.sin_port = htons( config.m_port );
     memset(m_address.sin_zero, '\0', sizeof m_address.sin_zero);
 

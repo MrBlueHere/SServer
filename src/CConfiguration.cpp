@@ -12,8 +12,8 @@
 using namespace std;
 
 CConfiguration::CConfiguration()
-: m_ipAddress("127.0.0.1"), m_port(8080), m_maxConnections(10), m_logType(Console),
-  m_validParameters( {"IPAddress", "Port", "ShutdownUrl", "MaxConnections", "LogType", "LogFile", "ServerDirectory"} )
+: m_ipAddress("127.0.0.1"), m_useIPv6(false), m_port(8080), m_maxConnections(10), m_logType(Console),
+  m_validParameters( {"IPAddress", "UseIPv6", "Port", "ShutdownUrl", "MaxConnections", "LogType", "LogFile", "ServerDirectory"} )
 { }
 
 void CConfiguration::ReadConfigurationFromFile(const std::string &configFilePath) {
@@ -40,25 +40,6 @@ void CConfiguration::ReadConfigurationFromFile(const std::string &configFilePath
 
         SetConfigParam(arg, val);
     }
-}
-
-/// TODO: Support IPv6
-unsigned int CConfiguration::IpAddressFromString(const std::string & addr) const {
-    istringstream stream;
-    stream.str(addr);
-
-    unsigned int result = 0;
-    unsigned int power = 0;
-
-    while(stream.good())
-    {
-        string substr;
-        getline(stream, substr, '.' );
-        int num = stoi(substr, nullptr, 10);
-        result += (unsigned  int)(num * pow(2, power));
-        power += 8;
-    }
-    return result;
 }
 
 void CConfiguration::SetConfigParam(const string &arg, string &val) {
@@ -99,6 +80,16 @@ void CConfiguration::SetConfigParam(const string &arg, string &val) {
     else if (arg == "ServerDirectory") {
         m_serverDirectory = val;
         return;
+    }
+    else if (arg == "UseIPv6") {
+        if (val == "true") {
+            m_useIPv6 = true;
+            return;
+        }
+        else if (val == "false") {
+            m_useIPv6 = false;
+            return;
+        }
     }
 
     stringstream oss;

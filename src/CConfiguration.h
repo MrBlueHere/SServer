@@ -25,6 +25,7 @@ public:
     void SetConfigParam(const std::string & arg, std::string & val);
 
     std::string m_ipAddress;
+    bool m_useIPv6;
     uint m_port;
     std::string m_shutdownUrl;
     uint m_maxConnections;
