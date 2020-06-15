@@ -12,6 +12,7 @@
 #include "CStaticFile.h"
 #include "CDirectory.h"
 #include "CExecutableScript.h"
+#include "CError.h"
 #include <string>
 #include <iostream>
 #include <cstring>
@@ -22,7 +23,6 @@
 #include <netinet/in.h>
 #include <netinet/tcp.h>
 #include <filesystem>
-
 #include <arpa/inet.h>
 namespace fs = std::filesystem;
 
@@ -78,6 +78,12 @@ bool CServer::Startup(const CConfiguration & config) {
 }
 
 int CServer::Listen() {
+    const int flag = 1;
+    if (setsockopt(m_masterSocket, SOL_SOCKET, SO_REUSEADDR, &flag, sizeof(int)) < 0) {
+        m_logger->Log("Setsockopt error");
+        exit(EXIT_FAILURE);
+    }
+
     if (bind(m_masterSocket, (struct sockaddr *)&m_address, sizeof(m_address)) < 0)
     {
         m_logger->Log("Failed to bind an address");
@@ -130,14 +136,14 @@ void CServer::HandleConnection(void * clientSocket) {
     bool isValid = false;
     auto parseResult = request.TryParseRequest(buffer, &isValid);
 
+    unique_ptr<CFile> file;
+
     if (!isValid) {
-        SendErrorResponse(parseResult.first, socket, parseResult.second);
+        file = make_unique<CError>(CError(parseResult.second, parseResult.first));
+        file->SendResponse(socket);
         close(socket);
         return;
     }
-
-    unique_ptr<CFile> file;
-    bool responseSent = false;
 
     try {
         string path = MapUriToPath(request.m_uri);
@@ -150,33 +156,23 @@ void CServer::HandleConnection(void * clientSocket) {
                 // There should be "/" at the end (maybe redirect)
 
                 // List directory
-                file = make_unique<CDirectory>(CDirectory());
+                file = make_unique<CDirectory>(CDirectory(path));
             }
 
             // Executable file
             else if (CExecutableScript::IsValidExecutableFile(path)) {
-                file = make_unique<CExecutableScript>(CExecutableScript());
+                file = make_unique<CExecutableScript>(CExecutableScript(path));
             }
 
             // Regular static files (images, JS, CSS, ...)
             else if (fs::is_regular_file(path)) {
-                auto size = fs::file_size(path);
-
-                SendResponse(200, socket, "OK", {
-                        {"Content-Type", contentType},
-                        {"Content-Length", to_string(size)}
-                }, false);
-                responseSent = true;
-
-                file = make_unique<CStaticFile>(CStaticFile());
+                file = make_unique<CStaticFile>(CStaticFile(path));
             }
 
             // Unsupported
             else {
                 throw std::runtime_error("File type not supported");
             }
-
-            file->SendResponse(socket, path);
         }
         else {
             // 404 not found
@@ -186,13 +182,10 @@ void CServer::HandleConnection(void * clientSocket) {
     catch (exception & e) {
         // log exception
 
-        if (!responseSent) {
-            SendErrorResponse(404, socket, e.what());
-        }
-        close(socket);
-        return;
+        file = make_unique<CError>(CError(e.what(), 404));
     }
 
+    file->SendResponse(socket);
     close(socket);
 }
 
@@ -222,51 +215,6 @@ std::string CServer::MapUriToPath(const std::string &rawUri) {
         uri = rawUri;
 
     return m_serverDirectory + uri;
-}
-
-void CServer::SendErrorResponse(int code, int socket, const string& message) {
-    // Send headers
-    SendResponse(code, socket, message, {
-            {"Content-Type","text/html;charset=utf-8" },
-            {"Allow","GET"}},true);
-
-    ostringstream output;
-    output
-    << "<html><body>"
-    <<"<h1>" << code << " " << message << "</h1><hr>"
-    <<"<p>Powered by SServer written by Ladislav Floriš.</p>"
-    << "</body></html>";
-
-    write(socket, output.str().c_str(), output.str().size());
-}
-
-void CServer::SendResponse(int code, int socket, const std::string& message, initializer_list<pair<string, string>> headers, bool closeConnection) {
-    string buffer;
-    auto begin = headers.begin();
-    auto end = headers.end();
-
-    buffer.append("HTTP/1.1 ");
-
-    //status kod
-    buffer.append(to_string(code));
-
-    //status message a enter
-    buffer.append(" ").append(message).append("\r\n");
-
-    auto header = begin;
-    while (header != end) {
-        buffer.append(header->first).append(": ").append(header->second).append("\r\n");
-        ++header;
-    }
-
-    if (closeConnection)
-        buffer.append("Connection: close\r\n");
-
-    buffer.append("\r\n");
-
-    write(socket, buffer.c_str(), buffer.size());
-
-    /// TODO: Log
 }
 
 void CServer::Shutdown() {

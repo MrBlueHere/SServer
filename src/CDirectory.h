@@ -11,7 +11,10 @@
 class CDirectory : public CFile {
 public:
     /// Default constructor
-    explicit CDirectory() = default;
+    CDirectory() = default;
+
+    /// Constructor accepting a path to the directory
+    explicit CDirectory(std::string path);
 
     /// Default copy constructor
     CDirectory(const CDirectory &) = default;
@@ -20,7 +23,10 @@ public:
     CDirectory & operator = (const CDirectory &) = default;
 
     /// Sends a static file response
-    void SendResponse(int socket, const std::string & path) override;
+    void SendResponse(int socket) override;
+
+    /// Path to the file
+    std::string m_path;
 };
 
 

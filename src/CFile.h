@@ -11,5 +11,9 @@
 class CFile {
 public:
     /// Pure virtual function responsible for sending the file's content using the given socket
-    virtual void SendResponse(int socket, const std::string & path) = 0;
+    virtual void SendResponse(int socket) = 0;
+
+    /// Sends response to the given socket
+    void SendHeaders(int code, int socket, const std::string& message,
+            std::initializer_list<std::pair<std::string, std::string>> headers, bool closeConnection);
 };

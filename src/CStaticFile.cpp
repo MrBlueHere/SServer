@@ -4,17 +4,36 @@
 */
 
 #include "CStaticFile.h"
+#include "CServer.h"
 #include <filesystem>
+#include <iostream>
+#include <utility>
 #include <sys/sendfile.h>
 #include <unistd.h>
 
 using namespace std;
 
-/// Sends response using sendfile() system call to avoid copying
-void CStaticFile::SendResponse(int socket, const string & path) {
-    int size = filesystem::file_size(path);
+CStaticFile::CStaticFile(string path) : m_path(std::move(path))
+{ }
 
-    int posix_handle = fileno(::fopen(path.c_str(), "r"));
+/// Sends response using sendfile() system call to avoid copying
+void CStaticFile::SendResponse(int socket) {
+    int size = filesystem::file_size(m_path);
+    //string contentType = CServer::GetContentType(m_path);
+    string contentType = "image/gif";
+
+    try {
+        // Send headers first, so that we start sending data to client asap and then send the file
+        SendHeaders(200, socket, "OK", {
+                {"Content-Type", contentType},
+                {"Content-Length", to_string(size)}
+        }, false);
+    }
+    catch (exception & e) {
+        cout << e.what() << endl;
+    }
+
+    int posix_handle = fileno(::fopen(m_path.c_str(), "r"));
 
     if (posix_handle) {
         while (size) {

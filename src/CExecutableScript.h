@@ -10,7 +10,10 @@
 class CExecutableScript : public CFile {
 public:
     /// Default constructor
-    explicit CExecutableScript() = default;
+    CExecutableScript() = default;
+
+    /// Constructor accepting a path to the file
+    explicit CExecutableScript(std::string path);
 
     /// Default copy constructor
     CExecutableScript(const CExecutableScript &) = default;
@@ -19,10 +22,13 @@ public:
     CExecutableScript & operator = (const CExecutableScript &) = default;
 
     /// Sends a static file response
-    void SendResponse(int socket, const std::string & path) override;
+    void SendResponse(int socket) override;
 
     /// Checks if file specified by the path is executable
     static bool IsValidExecutableFile(const std::string &path);
+
+    /// Path to the file
+    std::string m_path;
 };
 
 

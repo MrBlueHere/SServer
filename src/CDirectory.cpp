@@ -5,8 +5,13 @@
 
 #include "CDirectory.h"
 
+#include <utility>
+
 using namespace std;
 
-void CDirectory::SendResponse(int socket, const string &path) {
+CDirectory::CDirectory(string path) : m_path(std::move(path))
+{ }
+
+void CDirectory::SendResponse(int socket) {
 
 }

@@ -36,7 +36,7 @@ public:
 
     void HandleConnection(void *);
 
-    std::string GetContentType(const std::string & path);
+    static std::string GetContentType(const std::string & path);
 
     std::string MapUriToPath(const std::string & uri);
 
@@ -44,12 +44,6 @@ public:
     void Shutdown();
 
 private:
-    /// Sends response to the given socket
-    void SendResponse(int code, int socket, const std::string& msg, std::initializer_list<std::pair<std::string, std::string>> headers, bool closeConnection);
-
-    /// Sends error response (404, 500, etc.) to the given socket
-    void SendErrorResponse(int code, int socket, const std::string& msg);
-
     /// Signal that server should shut down
     bool m_awaitingShutdown;
 

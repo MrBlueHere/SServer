@@ -9,7 +9,10 @@
 class CStaticFile : public CFile {
 public:
     /// Default constructor
-    explicit CStaticFile() = default;
+    CStaticFile() = default;
+
+    /// Constructor accepting a path to the file
+    explicit CStaticFile(std::string path);
 
     /// Default copy constructor
     CStaticFile(const CStaticFile &) = default;
@@ -18,7 +21,10 @@ public:
     CStaticFile & operator = (const CStaticFile &) = default;
 
     /// Sends a static file response
-    void SendResponse(int socket, const std::string & path) override;
+    void SendResponse(int socket) override;
+
+    /// Path to the file
+    std::string m_path;
 };
 
 
