@@ -26,9 +26,6 @@ public:
 
     /// Checks if file specified by the path is executable
     static bool IsValidExecutableFile(const std::string &path);
-
-    /// Path to the file
-    std::string m_path;
 };
 
 

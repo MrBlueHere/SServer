@@ -10,10 +10,17 @@
 /// Abstract Base class for handling files and which is derived by other classes for specific file types
 class CFile {
 public:
+    CFile() = default;
+
+    explicit CFile(std::string path);
+
     /// Pure virtual function responsible for sending the file's content using the given socket
     virtual void SendResponse(int socket) = 0;
 
     /// Sends response to the given socket
     static void SendHeaders(int code, int socket, const std::string& message,
             std::initializer_list<std::pair<std::string, std::string>> headers, bool closeConnection);
+
+    /// Path to the file
+    std::string m_path;
 };

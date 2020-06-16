@@ -8,6 +8,8 @@
 
 using namespace std;
 
+CFile::CFile(string path) : m_path(move(path))
+{ }
 
 void CFile::SendHeaders(int code, int socket, const std::string& message, initializer_list<pair<string, string>> headers, bool closeConnection) {
     string buffer;

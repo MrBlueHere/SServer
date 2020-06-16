@@ -97,5 +97,3 @@ void CConfiguration::SetConfigParam(const string &arg, string &val) {
     string var = oss.str();
     throw runtime_error(var);
 }
-
-

@@ -21,8 +21,6 @@
 #include <unistd.h>
 #include <netinet/in.h>
 #include <sys/socket.h>
-#include <netinet/in.h>
-#include <netinet/tcp.h>
 #include <filesystem>
 #include <arpa/inet.h>
 namespace fs = std::filesystem;
@@ -56,6 +54,10 @@ bool CServer::Startup(const CConfiguration & config) {
         m_logger = make_shared<CFileLogger>(CFileLogger(config.m_logFile));
     }
 
+    if (!fs::exists(config.m_serverDirectory) || !fs::is_directory(config.m_serverDirectory)) {
+        m_logger->Log("ServerDirectory is not a valid directory");
+        return false;
+    }
     m_serverDirectory = config.m_serverDirectory;
 
     m_masterSocket = socket(AF_INET, SOCK_STREAM, 0);

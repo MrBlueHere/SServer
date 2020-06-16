@@ -13,7 +13,7 @@
 
 using namespace std;
 
-CStaticFile::CStaticFile(string path) : m_path(std::move(path))
+CStaticFile::CStaticFile(string path) : CFile(move(path))
 { }
 
 /// Sends response using sendfile() system call to avoid copying

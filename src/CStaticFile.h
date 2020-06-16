@@ -22,9 +22,6 @@ public:
 
     /// Sends a static file response
     void SendResponse(int socket) override;
-
-    /// Path to the file
-    std::string m_path;
 };
 
 

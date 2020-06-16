@@ -10,7 +10,7 @@
 
 using namespace std;
 
-CExecutableScript::CExecutableScript(string path) : m_path(std::move(path))
+CExecutableScript::CExecutableScript(string path) : CFile(move(path))
 { }
 
 void CExecutableScript::SendResponse(int socket) {
