@@ -8,6 +8,17 @@
 
 using namespace std;
 
+const char* CFile::HTML_UTF_8 = "text/html;charset=utf-8";
+
+const char * CFile::HTML_HEADER = "<!DOCTYPE html>\n"
+                                  "<html lang=\"en\">\n"
+                                  "<head>\n"
+                                  "    <meta charset=\"UTF-8\">\n"
+                                  "    <title>SServer</title>\n"
+                                  "</head>";
+
+const char * CFile::HTML_FOOT = "</html>";
+
 CFile::CFile(string path) : m_path(move(path))
 { }
 

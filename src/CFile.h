@@ -10,8 +10,10 @@
 /// Abstract Base class for handling files and which is derived by other classes for specific file types
 class CFile {
 public:
+    /// Default constructor
     CFile() = default;
 
+    /// Constructor accepting the path to the file
     explicit CFile(std::string path);
 
     /// Pure virtual function responsible for sending the file's content using the given socket
@@ -23,4 +25,11 @@ public:
 
     /// Path to the file
     std::string m_path;
+
+    /// HTML UTF8 content type content
+    static const char* HTML_UTF_8;
+    /// HTML header constant
+    static const char* HTML_HEADER;
+    /// HTML footer constant
+    static const char* HTML_FOOT;
 };

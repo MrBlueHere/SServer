@@ -142,7 +142,7 @@ void CServer::HandleConnection(void * clientSocket) {
     shared_ptr<CFile> file;
 
     if (!isValid) {
-        file = make_shared<CError>(CError(parseResult.second, parseResult.first))   ;
+        file = make_shared<CError>(CError(parseResult.second, parseResult.first));
         file->SendResponse(socket);
         close(socket);
         return;
