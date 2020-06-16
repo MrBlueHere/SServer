@@ -45,5 +45,7 @@ Polymorphism is used in class `CLogger`. `CLogger` is an abstract class with 2 d
 which implement logging to console and file respectively. `CServer` class instantiates an appropriate logger class in `Startup` 
 based on the configuration and then uses method `Log` to log messages irrespective of the instantiated logger.
 
-Polymorphism used in class `CFile`. `CFile` is an abstract class with derived classes `CStaticFile` `CDirectory` and `CExecutableScript`.
-`CFile` contains a pure virtual function `Log` which is overloaded in the derived classes.
+Polymorphism used in class `CFile`. `CFile` is an abstract class with derived classes `CStaticFile` `CDirectory`, `CExecutableScript`
+and `CError`.
+`CFile` contains a pure virtual function `SendResponse` to send response to a given socket. When a file type is determined, appropriate
+class derived from `CFile` is instantiated and when sending response, method `SendResponse` is called irrespective of the file type.

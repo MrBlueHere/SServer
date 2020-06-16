@@ -19,19 +19,13 @@ CStaticFile::CStaticFile(string path) : m_path(std::move(path))
 /// Sends response using sendfile() system call to avoid copying
 void CStaticFile::SendResponse(int socket) {
     int size = filesystem::file_size(m_path);
-    //string contentType = CServer::GetContentType(m_path);
-    string contentType = "image/gif";
+    string contentType = CServer::GetContentType(m_path);
 
-    try {
-        // Send headers first, so that we start sending data to client asap and then send the file
-        SendHeaders(200, socket, "OK", {
-                {"Content-Type", contentType},
-                {"Content-Length", to_string(size)}
-        }, false);
-    }
-    catch (exception & e) {
-        cout << e.what() << endl;
-    }
+    // Send headers first, so that we start sending data to client asap and then send the file
+    SendHeaders(200, socket, "OK", {
+            {"Content-Type", contentType},
+            {"Content-Length", to_string(size)}
+    }, false);
 
     int posix_handle = fileno(::fopen(m_path.c_str(), "r"));
 

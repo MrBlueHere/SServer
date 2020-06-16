@@ -14,6 +14,6 @@ public:
     virtual void SendResponse(int socket) = 0;
 
     /// Sends response to the given socket
-    void SendHeaders(int code, int socket, const std::string& message,
+    static void SendHeaders(int code, int socket, const std::string& message,
             std::initializer_list<std::pair<std::string, std::string>> headers, bool closeConnection);
 };
