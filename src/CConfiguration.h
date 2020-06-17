@@ -12,15 +12,16 @@
 /// Class responsible for handling reading and storing server configuration
 class CConfiguration {
 public:
+    /// Constructor
     CConfiguration();
 
-    // TODO: Copy constructor
-    // TODO: = operator
-    // TODO: Destructor
+    /// Forbidden copy constructor
+    CConfiguration(const CConfiguration &) = delete;
+
+    /// Forbidden copy assignment
+    CConfiguration & operator = (const CConfiguration &) = delete;
 
     void ReadConfigurationFromFile(const std::string &);
-
-    unsigned int IpAddressFromString(const std::string &) const;
 
     void SetConfigParam(const std::string & arg, std::string & val);
 

@@ -11,9 +11,11 @@
 
 using namespace std;
 
+/// Default constructor with default config settings
 CConfiguration::CConfiguration()
-: m_ipAddress("127.0.0.1"), m_useIPv6(false), m_port(8080), m_maxConnections(10), m_logType(Console),
-  m_validParameters( {"IPAddress", "UseIPv6", "Port", "ShutdownUrl", "MaxConnections", "LogType", "LogFile", "ServerDirectory"} )
+: m_ipAddress("127.0.0.1"), m_useIPv6(false), m_port(8080), m_shutdownUrl("shutdown"), m_maxConnections(10),
+m_logType(Console), m_logFile("log.txt"), m_serverDirectory("www"),
+m_validParameters( {"IPAddress", "UseIPv6", "Port", "ShutdownUrl", "MaxConnections", "LogType", "LogFile", "ServerDirectory"} )
 { }
 
 void CConfiguration::ReadConfigurationFromFile(const std::string &configFilePath) {
@@ -24,10 +26,20 @@ void CConfiguration::ReadConfigurationFromFile(const std::string &configFilePath
 
     string line;
     size_t position = 0;
-    string delimiter = "=";
+    char delimiter = '=';
+    char comment = '#';
+
     string arg, val;
     while(getline(configFile, line))
     {
+        // If this is a comment
+        if (line.find(comment) == 0)
+            continue;
+
+        // Is a blank line
+        if(line.find_first_not_of(' ') == string::npos)
+            continue;
+
         position = line.find(delimiter);
         arg = line.substr(0, position);
 
