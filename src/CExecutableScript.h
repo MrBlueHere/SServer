@@ -26,6 +26,19 @@ public:
 
     /// Checks if file specified by the path is executable
     static bool IsValidExecutableFile(const std::string &path);
+
+private:
+    /// Buffer constant
+    static const int READ_BUFFER;
+
+    /// Executes the file and returns the read content or an error message and success flag set to false if execution failed
+    std::string TryExecute(bool * success);
+
+    /// Sends response for a failed file execution
+    static void SendFailedResponse(int socket, const std::string & msg);
+
+    /// Send response for a successful file execution
+    static void SendSuccessResponse(int socket, const std::string & msg);
 };
 
 

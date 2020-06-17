@@ -150,7 +150,6 @@ void CServer::HandleConnection(void * clientSocket) {
 
     try {
         string path = MapUriToPath(request.m_uri);
-        string contentType = GetContentType(path);
 
         if (fs::exists(path)) {
 
