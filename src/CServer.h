@@ -24,7 +24,6 @@ public:
     CServer & operator = (const CServer &) = delete;
 
     /// Default destructor
-    // TODO: Is there anything to free?
     ~CServer() = default;
 
     /// Method to be called when server is started, responsible for configurating the server,
