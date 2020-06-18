@@ -13,7 +13,7 @@ public:
     CExecutableScript() = default;
 
     /// Constructor accepting a path to the file
-    explicit CExecutableScript(std::string path);
+    explicit CExecutableScript(std::string , std::shared_ptr<CLogger> logger);
 
     /// Default copy constructor
     CExecutableScript(const CExecutableScript &) = default;
@@ -35,10 +35,10 @@ private:
     std::string TryExecute(bool * success);
 
     /// Sends response for a failed file execution
-    static void SendFailedResponse(int socket, const std::string & msg);
+    void SendFailedResponse(int socket, const std::string & msg);
 
     /// Send response for a successful file execution
-    static void SendSuccessResponse(int socket, const std::string & msg);
+    void SendSuccessResponse(int socket, const std::string & msg);
 };
 
 

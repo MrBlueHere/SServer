@@ -9,10 +9,11 @@
 
 class CError : public CFile {
 public:
-    /// Default constructor
-    CError();
+    /// Default constructor accepting the logger
+    explicit CError(std::shared_ptr<CLogger> logger);
 
-    CError(std::string  msg, int code);
+    /// Constructor accepting the error message, code and a logger
+    CError(std::string msg, int code, std::shared_ptr<CLogger> logger);
 
     /// Default copy constructor
     CError(const CError &) = default;

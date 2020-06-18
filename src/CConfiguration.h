@@ -7,6 +7,7 @@
 
 #include <string>
 #include "logging/LogType.h"
+#include "logging/LogLevel.h"
 #include <set>
 
 /// Class responsible for handling reading and storing server configuration
@@ -33,9 +34,16 @@ public:
 
     /// Where should we log? (console, file, database, etc.)
     LogType m_logType;
+    /// What level of logs should we log? (Info, Warn, Error)
+    LogLevel m_logLevel;
+    /// How should individual logs look
+    std::string m_logFormat;
+    /// Whether only request and response header should be logged
+    bool m_headersOnly;
+    /// File where to log
     std::string m_logFile;
 
     std::string m_serverDirectory;
 
-    const std::set<std::string> m_validParameters;
+    static const std::set<std::string> m_validParameters;
 };

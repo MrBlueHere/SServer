@@ -11,8 +11,8 @@ public:
     /// Default constructor
     CStaticFile() = default;
 
-    /// Constructor accepting a path to the file
-    explicit CStaticFile(std::string path);
+    /// Constructor accepting a path to the file and a logger
+    explicit CStaticFile(std::string path, std::shared_ptr<CLogger> logger);
 
     /// Default copy constructor
     CStaticFile(const CStaticFile &) = default;

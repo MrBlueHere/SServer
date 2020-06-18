@@ -1,9 +1,28 @@
-# This is a config file
+#This is a config file
+
 IPAddress=127.0.0.1
-UseIPv6=true
+
+# true / false
+UseIPv6=false
+
 Port=8080
+
 ShutdownUrl=shutdown
+
 MaxConnections=20
+
+# Console / File
 LogType=Console
+
+# Info / Warn / Error - logs on the selected level and all lower
+LogLevel=Info
+
+# '@' is a wildcard, accepted variables: logLevel, message, time
+LogFormat=[@logLevel@] | @message@ | received:@time@
+
+# Should only request and response header get logged or the whole
+HeaderOnly=false
+
 LogFile=log.txt
+
 ServerDirectory=/home/mrblue/Documents/CVUT_FIT/PA2_semestralka/SServer/www

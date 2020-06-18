@@ -11,7 +11,7 @@ namespace fs = std::filesystem;
 
 using namespace std;
 
-CDirectory::CDirectory(string path) : CFile(move(path))
+CDirectory::CDirectory(string path, shared_ptr<CLogger> logger) : CFile(move(path), move(logger))
 { }
 
 void CDirectory::SendResponse(int socket) {

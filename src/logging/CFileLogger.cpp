@@ -4,7 +4,6 @@
 */
 
 #include "CFileLogger.h"
-#include <iostream>
 #include <string>
 #include <ostream>
 #include <fstream>
@@ -12,9 +11,11 @@
 
 using namespace std;
 
-CFileLogger::CFileLogger(string logFile) : m_logFile(move(logFile)) {}
+CFileLogger::CFileLogger(string logFile, string logFormat, LogLevel level, bool headerOnly)
+: CLogger(move(logFormat), level, headerOnly), m_logFile(move(logFile))
+{ }
 
-void CFileLogger::Log(const std::string & text) {
+void CFileLogger::Info(const std::string & text) {
     ofstream logFile;
     logFile.open (m_logFile);
     if (!logFile.is_open()) {
@@ -23,4 +24,12 @@ void CFileLogger::Log(const std::string & text) {
 
     logFile << text << endl;
     logFile.close();
+}
+
+void CFileLogger::Warn(const string &) {
+
+}
+
+void CFileLogger::Error(const string &) {
+
 }

@@ -11,10 +11,10 @@
 
 using namespace std;
 
-CError::CError() : m_message("Not Found"), m_code(404)
+CError::CError(std::shared_ptr<CLogger> logger) : CFile(move(logger)), m_message("Not Found"), m_code(404)
 { }
 
-CError::CError(string msg, int code) : m_message(move(msg)), m_code(code)
+CError::CError(string msg, int code, shared_ptr<CLogger> logger) : CFile(move(logger)), m_message(move(msg)), m_code(code)
 { }
 
 void CError::SendResponse(int socket) {

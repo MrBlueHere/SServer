@@ -41,11 +41,13 @@ Each connection will get a dedicated thread (for simplicity purposes, we won't u
 already created threads) to make serving multiple clients faster.
 
 ### Polymorphism 
-Polymorphism is used in class `CLogger`. `CLogger` is an abstract class with 2 derived classes `CConsoleLogger` and `CFileLogger`
-which implement logging to console and file respectively. `CServer` class instantiates an appropriate logger class in `Startup` 
-based on the configuration and then uses method `Log` to log messages irrespective of the instantiated logger.
-
 Polymorphism used in class `CFile`. `CFile` is an abstract class with derived classes `CStaticFile` `CDirectory`, `CExecutableScript`
 and `CError`.
 `CFile` contains a pure virtual function `SendResponse` to send response to a given socket. When a file type is determined, appropriate
 class derived from `CFile` is instantiated and when sending response, method `SendResponse` is called irrespective of the file type.
+
+Polymorphism is used in class `CLogger`. `CLogger` is an abstract class with 2 derived classes `CConsoleLogger` and `CFileLogger`
+which implement logging to console and file respectively. `CServer` class instantiates an appropriate logger class in `Startup` 
+based on the configuration. Logging methods are then used to log messages irrespective of the instantiated logger.
+There are 3 methods for logging `Info`, `Warn` and `Error`. All of them are pure virtual methods and they are implemented in 
+the derived logger classes.

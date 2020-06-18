@@ -12,7 +12,7 @@ using namespace std;
 
 const int CExecutableScript::READ_BUFFER = 256;
 
-CExecutableScript::CExecutableScript(string path) : CFile(move(path))
+CExecutableScript::CExecutableScript(string path, shared_ptr<CLogger> logger) : CFile(move(path), move(logger))
 { }
 
 void CExecutableScript::SendResponse(int socket) {
@@ -72,7 +72,7 @@ bool CExecutableScript::IsValidExecutableFile(const string &path) {
 }
 
 void CExecutableScript::SendFailedResponse(int socket, const string &fileResult) {
-    CError errorResponse(fileResult, 500);
+    CError errorResponse(fileResult, 500, m_logger);
     errorResponse.SendResponse(socket);
 }
 

@@ -9,6 +9,18 @@
 
 using namespace std;
 
-void CConsoleLogger::Log(const string & text) {
+CConsoleLogger::CConsoleLogger(std::string logFormat, LogLevel level, bool headerOnly)
+: CLogger(move(logFormat), level, headerOnly)
+{ }
+
+void CConsoleLogger::Info(const string & text) {
+    cout << text << endl;
+}
+
+void CConsoleLogger::Warn(const string & text) {
+    cout << text << endl;
+}
+
+void CConsoleLogger::Error(const string & text) {
     cout << text << endl;
 }

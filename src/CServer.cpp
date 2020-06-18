@@ -48,14 +48,14 @@ const std::map<std::string, std::string> CServer::m_mimeTypes = {
 
 bool CServer::Startup(const CConfiguration & config) {
     if (config.m_logType == Console) {
-        m_logger = make_shared<CConsoleLogger>(CConsoleLogger());
+        logger = make_shared<CConsoleLogger>(CConsoleLogger(config.m_logFormat, config.m_logLevel, config.m_headersOnly));
     }
     else if (config.m_logType == File) {
-        m_logger = make_shared<CFileLogger>(CFileLogger(config.m_logFile));
+        logger = make_shared<CFileLogger>(CFileLogger(config.m_logFile, config.m_logFormat, config.m_logLevel, config.m_headersOnly));
     }
 
     if (!fs::exists(config.m_serverDirectory) || !fs::is_directory(config.m_serverDirectory)) {
-        m_logger->Log("ServerDirectory is not a valid directory");
+        logger->Error("ServerDirectory is not a valid directory");
         return false;
     }
     m_serverDirectory = config.m_serverDirectory;
@@ -63,14 +63,14 @@ bool CServer::Startup(const CConfiguration & config) {
     m_masterSocket = socket(AF_INET, SOCK_STREAM, 0);
     if (m_masterSocket == 0)
     {
-        m_logger->Log("Failed to create a master socket");
+        logger->Error("Failed to create a master socket");
         return false;
     }
 
     m_address.sin_family = config.m_useIPv6 ? AF_INET6 : AF_INET;
 
     if (!inet_pton(m_address.sin_family, config.m_ipAddress.c_str(), &(m_address.sin_addr))) {
-        m_logger->Log("Invalid IP address");
+        logger->Error("Invalid IP address");
         return false;
     }
 
@@ -83,20 +83,20 @@ bool CServer::Startup(const CConfiguration & config) {
 int CServer::Listen() {
     const int flag = 1;
     if (setsockopt(m_masterSocket, SOL_SOCKET, SO_REUSEADDR, &flag, sizeof(int)) < 0) {
-        m_logger->Log("Setsockopt error");
-        exit(EXIT_FAILURE);
+        logger->Error("Setsockopt error");
+        return 1;
     }
 
     if (bind(m_masterSocket, (struct sockaddr *)&m_address, sizeof(m_address)) < 0)
     {
-        m_logger->Log("Failed to bind an address");
-        exit(EXIT_FAILURE);
+        logger->Error("Failed to bind an address");
+        return 1;
     }
 
     if (listen(m_masterSocket, m_maxConnections) < 0)
     {
-        m_logger->Log("Failed to start listening");
-        exit(EXIT_FAILURE);
+        logger->Error("Failed to start listening");
+        return 1;
     }
 
     int client_socket;
@@ -105,14 +105,12 @@ int CServer::Listen() {
     // Handle requests until server should shut down
     while(!m_awaitingShutdown)
     {
-        cout << "\n+++++++ Waiting for new connection ++++++++\n" << endl;
-
         // Accept request
         client_socket = accept(m_masterSocket, (struct sockaddr *)&m_address, (socklen_t*)&addrLen);
         if (client_socket < 0)
         {
-            m_logger->Log("Failed to accept the request");
-            exit(EXIT_FAILURE);
+            logger->Warn("Failed to accept the request");
+            continue;
         }
 
         // Handler it and assign thread
@@ -125,6 +123,7 @@ int CServer::Listen() {
     return 0;
 }
 
+/// Handles the connection on the clientSocket in a new thread
 void CServer::HandleConnection(void * clientSocket) {
     int socket = *(int *)clientSocket;
     delete (int *)clientSocket;
@@ -132,22 +131,25 @@ void CServer::HandleConnection(void * clientSocket) {
     char buffer[m_bufferSize] = {0};
 
     read( socket , buffer, m_bufferSize);
-    cout << buffer << endl;
 
     // Try to parse request and validate it
     CRequest request;
     bool isValid = false;
     auto parseResult = request.TryParseRequest(buffer, &isValid);
 
+    // Log the request
+    logger->Info(request.ToString(logger->m_headerOnly));
+
     shared_ptr<CFile> file;
 
     if (!isValid) {
-        file = make_shared<CError>(CError(parseResult.second, parseResult.first));
+        file = make_shared<CError>(CError(parseResult.second, parseResult.first, logger));
         file->SendResponse(socket);
         close(socket);
         return;
     }
 
+    // Is a valid request, it's good to continue
     try {
         string path = MapUriToPath(request.m_uri);
 
@@ -155,20 +157,18 @@ void CServer::HandleConnection(void * clientSocket) {
 
             // Directory, it's content should be returned
             if (fs::is_directory(path)) {
-                // There should be "/" at the end (maybe redirect)
-
                 // List directory
-                file = make_shared<CDirectory>(CDirectory(path));
+                file = make_shared<CDirectory>(CDirectory(path, logger));
             }
 
             // Executable file
             else if (CExecutableScript::IsValidExecutableFile(path)) {
-                file = make_shared<CExecutableScript>(CExecutableScript(path));
+                file = make_shared<CExecutableScript>(CExecutableScript(path, logger));
             }
 
             // Regular static files (images, JS, CSS, ...)
             else if (fs::is_regular_file(path)) {
-                file = make_shared<CStaticFile>(CStaticFile(path));
+                file = make_shared<CStaticFile>(CStaticFile(path, logger));
             }
 
             // Unsupported
@@ -177,14 +177,11 @@ void CServer::HandleConnection(void * clientSocket) {
             }
         }
         else {
-            // 404 not found
             throw std::runtime_error("File not found");
         }
     }
     catch (exception & e) {
-        // log exception
-
-        file = make_shared<CError>(CError(e.what(), 404));
+        file = make_shared<CError>(CError(e.what(), 404, logger));
     }
 
     file->SendResponse(socket);

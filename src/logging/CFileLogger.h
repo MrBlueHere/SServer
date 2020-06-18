@@ -11,7 +11,7 @@
 class CFileLogger : public CLogger {
 public:
     /// Constructor accepting log file as parameter
-    explicit CFileLogger(std::string logFile);
+    explicit CFileLogger(std::string logFile, std::string logFormat, LogLevel level, bool headerOnly);
 
     /// Default copy constructor
     CFileLogger(const CFileLogger &) = default;
@@ -19,8 +19,14 @@ public:
     /// Default copy assignment
     CFileLogger & operator = (const CFileLogger &) = default;
 
-    void Log(const std::string &) override;
+    /// Method for logging information
+    void Info(const std::string &) override;
 
+    /// Method for logging warnings
+    void Warn(const std::string &) override;
+
+    /// Method for logging errors
+    void Error(const std::string &) override;
 private:
     std::string m_logFile;
 };

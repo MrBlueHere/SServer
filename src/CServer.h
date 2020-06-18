@@ -33,8 +33,10 @@ public:
     /// To be called when server should start accepting requests
     int Listen();
 
+    /// Handles an incoming connection
     void HandleConnection(void *);
 
+    /// Determines the content type header from the uri
     static std::string GetContentType(const std::string & path);
 
     std::string MapUriToPath(const std::string & uri);
@@ -42,11 +44,12 @@ public:
     /// Handle server shutdown
     void Shutdown();
 
+    /// Logger instance
+    std::shared_ptr<CLogger> logger;
 private:
     /// Signal that server should shut down
     bool m_awaitingShutdown;
 
-    std::shared_ptr<CLogger> m_logger;
     std::string m_serverDirectory;
 
     sockaddr_in m_address;

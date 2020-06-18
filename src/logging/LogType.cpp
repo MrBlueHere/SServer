@@ -4,7 +4,6 @@
 */
 
 #include "LogType.h"
-#include <iostream>
 
 using namespace std;
 

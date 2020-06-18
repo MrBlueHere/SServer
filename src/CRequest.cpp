@@ -37,5 +37,17 @@ pair<int, string> CRequest::TryParseRequest(const string &rawRequest, bool * isV
     } while (!line.empty());*/
 
     *isValid = true;
+    m_rawRequest = rawRequest;
     return pair<int, string>(200, "OK");
+}
+
+std::string CRequest::ToString(bool headOnly = false) {
+   if (headOnly) {
+       stringstream oss;
+       oss << m_method << " " << m_uri << " " << m_protocol << endl;
+       return oss.str();
+   }
+
+   // The whole request
+   return m_rawRequest;
 }

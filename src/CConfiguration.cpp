@@ -11,11 +11,14 @@
 
 using namespace std;
 
+const set<std::string> CConfiguration::m_validParameters =
+        {"IPAddress", "UseIPv6", "Port", "ShutdownUrl", "MaxConnections", "LogType", "LogLevel", "LogFormat", "HeaderOnly", "LogFile", "ServerDirectory"};
+
 /// Default constructor with default config settings
 CConfiguration::CConfiguration()
 : m_ipAddress("127.0.0.1"), m_useIPv6(false), m_port(8080), m_shutdownUrl("shutdown"), m_maxConnections(10),
-m_logType(Console), m_logFile("log.txt"), m_serverDirectory("www"),
-m_validParameters( {"IPAddress", "UseIPv6", "Port", "ShutdownUrl", "MaxConnections", "LogType", "LogFile", "ServerDirectory"} )
+m_logType(Console), m_logLevel(Info), m_logFormat("[@logLevel@] | @message@ | received:@time@"), m_headersOnly(false), m_logFile("log.txt"),
+m_serverDirectory("www")
 { }
 
 void CConfiguration::ReadConfigurationFromFile(const std::string &configFilePath) {
@@ -82,6 +85,27 @@ void CConfiguration::SetConfigParam(const string &arg, string &val) {
     else if (arg == "LogType") {
         if (val == LogTypeToString(Console) || val == LogTypeToString(File)) {
             m_logType = StringToLogType(val);
+            return;
+        }
+    }
+    else if (arg == "LogLevel") {
+        if (val == LogLevelToString(Info) || val == LogLevelToString(Warn) || val == LogLevelToString(Error)) {
+            m_logLevel = StringToLogLevel(val);
+            return;
+        }
+    }
+    // todo: validate
+    else if (arg == "LogFormat") {
+        m_logFormat = val;
+        return;
+    }
+    else if (arg == "HeaderOnly") {
+        if (val == "true") {
+            m_headersOnly = true;
+            return;
+        }
+        else if (val == "false") {
+            m_headersOnly = false;
             return;
         }
     }

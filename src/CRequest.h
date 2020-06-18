@@ -25,9 +25,20 @@ public:
     /// or isn't supported
     std::pair<int, std::string> TryParseRequest(const std::string & rawRequest, bool * isValid) noexcept;
 
+    /// Returns the string representation of the request
+    std::string ToString(bool headOnly);
+
+    /// The http method (GET / POST / PUT, ...)
     std::string m_method;
+
+    /// Requested uri
     std::string m_uri;
+
+    /// Used protocol
     std::string m_protocol;
+
+    /// Original raw request
+    std::string m_rawRequest;
 };
 
 

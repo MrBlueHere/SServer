@@ -4,7 +4,10 @@
 */
 
 #include "CFile.h"
+#include "CServer.h"
 #include <unistd.h>
+
+#include <utility>
 
 using namespace std;
 
@@ -19,7 +22,10 @@ const char * CFile::HTML_HEADER = "<!DOCTYPE html>\n"
 
 const char * CFile::HTML_FOOT = "</html>";
 
-CFile::CFile(string path) : m_path(move(path))
+CFile::CFile(string path, shared_ptr<CLogger> logger) : m_path(move(path)), m_logger(move(logger))
+{ }
+
+CFile::CFile(shared_ptr<CLogger> logger) : m_logger(move(logger))
 { }
 
 void CFile::SendHeaders(int code, int socket, const std::string& message, initializer_list<pair<string, string>> headers, bool closeConnection) {
@@ -45,5 +51,5 @@ void CFile::SendHeaders(int code, int socket, const std::string& message, initia
 
     write(socket, buffer.c_str(), buffer.size());
 
-    /// TODO: Log
+    m_logger->Info(buffer);
 }

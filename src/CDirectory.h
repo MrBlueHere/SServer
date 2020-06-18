@@ -13,8 +13,8 @@ public:
     /// Default constructor
     CDirectory() = default;
 
-    /// Constructor accepting a path to the directory
-    explicit CDirectory(std::string path);
+    /// Constructor accepting a path to the directory and logger
+    explicit CDirectory(std::string path, std::shared_ptr<CLogger> logger);
 
     /// Default copy constructor
     CDirectory(const CDirectory &) = default;
