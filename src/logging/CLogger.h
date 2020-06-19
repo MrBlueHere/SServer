@@ -6,6 +6,7 @@
 #pragma once
 
 #include <string>
+#include <vector>
 #include "../CRequest.h"
 #include "LogLevel.h"
 
@@ -31,4 +32,8 @@ public:
 
     /// Should only the request and response header be writen
     bool m_headerOnly;
+
+private:
+    /// Checks whether the logger should log at this level
+    bool ShouldMessageGetLogged(LogLevel level);
 };

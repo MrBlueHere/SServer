@@ -137,7 +137,7 @@ void CServer::HandleConnection(void * clientSocket) {
     bool isValid = false;
     auto parseResult = request.TryParseRequest(buffer, &isValid);
 
-    // Log the request
+    // CLog the request
     logger->Info(request.ToString(logger->m_headerOnly));
 
     shared_ptr<CFile> file;

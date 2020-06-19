@@ -17,8 +17,8 @@ const set<std::string> CConfiguration::m_validParameters =
 /// Default constructor with default config settings
 CConfiguration::CConfiguration()
 : m_ipAddress("127.0.0.1"), m_useIPv6(false), m_port(8080), m_shutdownUrl("shutdown"), m_maxConnections(10),
-m_logType(Console), m_logLevel(Info), m_logFormat("[@logLevel@] | @message@ | received:@time@"), m_headersOnly(false), m_logFile("log.txt"),
-m_serverDirectory("www")
+m_logType(Console), m_logLevel(Info), m_logFormat("[@logLevel@] | received:@time@ | @message@ "), m_headersOnly(true), m_logFile("log.txt"),
+m_serverDirectory("examples")
 { }
 
 void CConfiguration::ReadConfigurationFromFile(const std::string &configFilePath) {

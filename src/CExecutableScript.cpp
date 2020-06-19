@@ -49,7 +49,7 @@ string CExecutableScript::TryExecute(bool * success) {
     }
     catch(exception & e) {
         pclose(exec);
-        // Todo: Log
+        // Todo: CLog
         *success = false;
         return e.what();
     }

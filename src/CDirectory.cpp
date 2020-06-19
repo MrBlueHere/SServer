@@ -5,7 +5,6 @@
 
 #include "CDirectory.h"
 #include <filesystem>
-#include <iostream>
 #include <unistd.h>
 namespace fs = std::filesystem;
 
