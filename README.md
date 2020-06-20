@@ -41,8 +41,8 @@ Each connection will get a dedicated thread (for simplicity purposes, we won't u
 already created threads) to make serving multiple clients faster.
 
 ### Polymorphism 
-Polymorphism used in class `CFile`. `CFile` is an abstract class with derived classes `CStaticFile` `CDirectory`, `CExecutableScript`
-and `CError`.
+Polymorphism used in class `CFile`. `CFile` is an abstract class with derived classes `CStaticFile` `CDirectory`, `CExecutableScript`,
+ `CError` and `CShutdown`.
 `CFile` contains a pure virtual function `SendResponse` to send response to a given socket. When a file type is determined, appropriate
 class derived from `CFile` is instantiated and when sending response, method `SendResponse` is called irrespective of the file type.
 

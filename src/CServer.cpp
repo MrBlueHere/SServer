@@ -13,8 +13,8 @@
 #include "CDirectory.h"
 #include "CExecutableScript.h"
 #include "CError.h"
+#include "CShutdown.h"
 #include <string>
-#include <iostream>
 #include <cstring>
 #include <thread>
 #include <memory>
@@ -59,6 +59,7 @@ bool CServer::Startup(const CConfiguration & config) {
         return false;
     }
     m_serverDirectory = config.m_serverDirectory;
+    m_shutdownUrl = config.m_shutdownUrl;
 
     m_masterSocket = socket(AF_INET, SOCK_STREAM, 0);
     if (m_masterSocket == 0)
@@ -113,13 +114,15 @@ int CServer::Listen() {
             continue;
         }
 
-        // Handler it and assign thread
-        int * p_clientSocket = new int(client_socket);
-        thread th(&CServer::HandleConnection, this, p_clientSocket);
-        // This thread shouldn't be blocking the main thread, so detach
-        th.detach();
+        // First check if flag wasn't changed when the server was waiting
+        if (!m_awaitingShutdown) {
+            // Handler it and assign thread
+            int * p_clientSocket = new int(client_socket);
+            thread th(&CServer::HandleConnection, this, p_clientSocket);
+            // This thread shouldn't be blocking the main thread, so detach
+            th.detach();
+        }
     }
-
     return 0;
 }
 
@@ -153,8 +156,13 @@ void CServer::HandleConnection(void * clientSocket) {
     try {
         string path = MapUriToPath(request.m_uri);
 
-        if (fs::exists(path)) {
+        // Check if is shutdown uri
+        if (request.m_uri == m_shutdownUrl) {
+            file = make_shared<CShutdown>(logger);
+            m_awaitingShutdown = true;
+        }
 
+        else if (fs::exists(path)) {
             // Directory, it's content should be returned
             if (fs::is_directory(path)) {
                 // List directory

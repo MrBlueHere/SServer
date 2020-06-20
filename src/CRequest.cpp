@@ -30,12 +30,6 @@ pair<int, string> CRequest::TryParseRequest(const string &rawRequest, bool * isV
         return pair<int, string>(505, "HTTP Version Not Supported");
     }
 
-    // Read the headers while valid, but don't process them
-    // This server doesn't implement any features specified by headers
-    /*do {
-        getline(stream, line);
-    } while (!line.empty());*/
-
     *isValid = true;
     m_rawRequest = rawRequest;
     return pair<int, string>(200, "OK");

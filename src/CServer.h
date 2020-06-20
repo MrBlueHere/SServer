@@ -50,7 +50,11 @@ private:
     /// Signal that server should shut down
     bool m_awaitingShutdown;
 
+    /// Root server directory
     std::string m_serverDirectory;
+
+    /// Shutdown uri
+    std::string m_shutdownUrl;
 
     sockaddr_in m_address;
     int m_masterSocket;
