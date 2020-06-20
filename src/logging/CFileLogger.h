@@ -7,17 +7,12 @@
 
 #include "CLogger.h"
 #include <string>
+#include <mutex>
 
 class CFileLogger : public CLogger {
 public:
     /// Constructor accepting log file as parameter
     explicit CFileLogger(std::string logFile, std::string logFormat, LogLevel level, bool headerOnly);
-
-    /// Default copy constructor
-    CFileLogger(const CFileLogger &) = default;
-
-    /// Default copy assignment
-    CFileLogger & operator = (const CFileLogger &) = default;
 
     /// Method for logging information
     void Info(const std::string &) override;
@@ -30,6 +25,9 @@ public:
 private:
     /// Where to store logs
     std::string m_logFile;
+
+    /// Mutex for accessing the log file
+    std::mutex m_fileMutex;
 };
 
 

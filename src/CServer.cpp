@@ -48,10 +48,10 @@ const std::map<std::string, std::string> CServer::m_mimeTypes = {
 
 bool CServer::Startup(const CConfiguration & config) {
     if (config.m_logType == Console) {
-        logger = make_shared<CConsoleLogger>(CConsoleLogger(config.m_logFormat, config.m_logLevel, config.m_headersOnly));
+        logger = make_shared<CConsoleLogger>(config.m_logFormat, config.m_logLevel, config.m_headersOnly);
     }
     else if (config.m_logType == File) {
-        logger = make_shared<CFileLogger>(CFileLogger(config.m_logFile, config.m_logFormat, config.m_logLevel, config.m_headersOnly));
+        logger = make_shared<CFileLogger>(config.m_logFile, config.m_logFormat, config.m_logLevel, config.m_headersOnly);
     }
 
     if (!fs::exists(config.m_serverDirectory) || !fs::is_directory(config.m_serverDirectory)) {
@@ -143,7 +143,7 @@ void CServer::HandleConnection(void * clientSocket) {
     shared_ptr<CFile> file;
 
     if (!isValid) {
-        file = make_shared<CError>(CError(parseResult.second, parseResult.first, logger));
+        file = make_shared<CError>(parseResult.second, parseResult.first, logger);
         file->SendResponse(socket);
         close(socket);
         return;
@@ -158,17 +158,17 @@ void CServer::HandleConnection(void * clientSocket) {
             // Directory, it's content should be returned
             if (fs::is_directory(path)) {
                 // List directory
-                file = make_shared<CDirectory>(CDirectory(path, logger));
+                file = make_shared<CDirectory>(path, logger);
             }
 
             // Executable file
             else if (CExecutableScript::IsValidExecutableFile(path)) {
-                file = make_shared<CExecutableScript>(CExecutableScript(path, logger));
+                file = make_shared<CExecutableScript>(path, logger);
             }
 
             // Regular static files (images, JS, CSS, ...)
             else if (fs::is_regular_file(path)) {
-                file = make_shared<CStaticFile>(CStaticFile(path, logger));
+                file = make_shared<CStaticFile>(path, logger);
             }
 
             // Unsupported
@@ -181,7 +181,7 @@ void CServer::HandleConnection(void * clientSocket) {
         }
     }
     catch (exception & e) {
-        file = make_shared<CError>(CError(e.what(), 404, logger));
+        file = make_shared<CError>(e.what(), 404, logger);
     }
 
     file->SendResponse(socket);
