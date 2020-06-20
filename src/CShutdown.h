@@ -22,7 +22,11 @@ public:
     /// Default copy assignment
     CShutdown & operator = (const CShutdown &) = default;
 
+    /// Default destructor
+    ~CShutdown() = default;
+
     /// Sends a static file response
+    /// @param socket, the socket to write to
     void SendResponse(int socket) override;
 };
 

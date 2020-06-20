@@ -13,7 +13,9 @@ public:
     CExecutableScript() = default;
 
     /// Constructor accepting a path to the file
-    explicit CExecutableScript(std::string , std::shared_ptr<CLogger> logger);
+    /// \param path, to the file
+    /// \param logger, logger instance
+    explicit CExecutableScript(std::string path, std::shared_ptr<CLogger> logger);
 
     /// Default copy constructor
     CExecutableScript(const CExecutableScript &) = default;
@@ -21,10 +23,15 @@ public:
     /// Default copy assignment
     CExecutableScript & operator = (const CExecutableScript &) = default;
 
+    /// Default destructor
+    ~CExecutableScript() = default;
+
     /// Sends a static file response
+    /// @param socket, the socket to write to
     void SendResponse(int socket) override;
 
     /// Checks if file specified by the path is executable
+    /// @param path, the file to check
     static bool IsValidExecutableFile(const std::string &path);
 
 private:

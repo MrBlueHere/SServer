@@ -38,8 +38,13 @@ public:
     void HandleConnection(void *);
 
     /// Determines the content type header from the uri
-    static std::string GetContentType(const std::string & path);
+    /// @param uri, the uri requested
+    /// \return valid mime type
+    static std::string GetContentType(const std::string & uri);
 
+    /// Maps the given uri to a path to the request resource
+    /// \param uri, the uri requested
+    /// \return path to the resource
     std::string MapUriToPath(const std::string & uri);
 
     /// Logger instance

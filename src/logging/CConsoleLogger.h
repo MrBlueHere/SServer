@@ -8,6 +8,7 @@
 #include "CLogger.h"
 #include <string>
 
+/// Logger class responsible for logging to console
 class CConsoleLogger : public CLogger {
 public:
     /// Default constructor
@@ -19,14 +20,20 @@ public:
     /// Default copy assignment
     CConsoleLogger & operator = (const CConsoleLogger &) = default;
 
+    /// Default destructor
+    ~CConsoleLogger() = default;
+
     /// Method for logging information
-    void Info(const std::string &) override;
+    /// \param msg to log
+    void Info(const std::string & msg) override;
 
     /// Method for logging warnings
-    void Warn(const std::string &) override;
+    /// \param msg to log
+    void Warn(const std::string & msg) override;
 
     /// Method for logging errors
-    void Error(const std::string &) override;
+    /// \param msg to log
+    void Error(const std::string & msg) override;
 };
 
 

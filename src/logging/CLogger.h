@@ -13,7 +13,17 @@
 /// Abstract Base class responsible for logging, other logger classes are derived from this class
 class CLogger {
 public:
+    /// Main constructor
     CLogger(std::string logFormat, LogLevel level, bool headerOnly);
+
+    /// Default copy constructor
+    CLogger(const CLogger &) = default;
+
+    /// Default copy assignment
+    CLogger & operator = (const CLogger &) = default;
+
+    /// Default destructor
+    ~CLogger() = default;
 
     /// Pure virtual method for logging information
     virtual void Info(const std::string &) = 0;

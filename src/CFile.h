@@ -16,15 +16,24 @@ public:
     CFile() = default;
 
     /// Constructor accepting only the logger
+    /// \param logger, logger instance
     explicit CFile(std::shared_ptr<CLogger> logger);
 
     /// Constructor accepting the path to the file and logger
+    /// \param path, to the file
+    /// \param logger, logger instance
     explicit CFile(std::string path, std::shared_ptr<CLogger> logger);
 
     /// Pure virtual function responsible for sending the file's content using the given socket
+    /// \param socket, the socket to write to
     virtual void SendResponse(int socket) = 0;
 
     /// Sends response to the given socket
+    /// \param code, status code
+    /// \param socket, socket to write to
+    /// \param message, message to display on the page
+    /// \param headers, http headers
+    /// \param closeConnection, whether the connection should be closed
     void SendHeaders(int code, int socket, const std::string& message,
             std::initializer_list<std::pair<std::string, std::string>> headers, bool closeConnection);
 

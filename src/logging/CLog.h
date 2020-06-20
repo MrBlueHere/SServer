@@ -8,6 +8,7 @@
 #include <string>
 #include "LogLevel.h"
 
+/// Class representing the log, capable of formatting a given log message to a uniform form
 class CLog {
 public:
     /// Constructor accepting the message to be logged and log level
@@ -18,6 +19,9 @@ public:
 
     /// Default copy assignment
     CLog & operator = (const CLog &) = default;
+
+    /// Default destructor
+    ~CLog() = default;
 
     /// Formats the given message using the m_logFormat
     std::string GetFormatted(const std::string & format);
