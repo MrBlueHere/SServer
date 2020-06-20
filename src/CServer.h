@@ -15,6 +15,7 @@
 /// Main class responsible for server processes and configuration
 class CServer {
 public:
+    /// Empty constructor
     CServer();
 
     /// Forbidden copy constructor
@@ -40,9 +41,6 @@ public:
     static std::string GetContentType(const std::string & path);
 
     std::string MapUriToPath(const std::string & uri);
-
-    /// Handle server shutdown
-    void Shutdown();
 
     /// Logger instance
     std::shared_ptr<CLogger> logger;

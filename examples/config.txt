@@ -1,15 +1,19 @@
 #This is a config file
 
+# Configurable IP address
 IPAddress=127.0.0.1
 
 # true / false
 UseIPv6=false
 
+# Configurable port
 Port=8080
 
+# When this url is hit, server will shutdown
 ShutdownUrl=shutdown
 
-MaxConnections=20
+# Max amount of queued connections before server starts refusing them
+MaxConnections=10
 
 # Console / File
 LogType=Console
@@ -23,6 +27,8 @@ LogFormat=[@logLevel@] | @message@ | received:@time@
 # Should only request and response header get logged or the whole
 HeaderOnly=false
 
+# Path to the log file
 LogFile=log.txt
 
-ServerDirectory=/home/mrblue/Documents/CVUT_FIT/PA2_semestralka/SServer/www
+# Path to the server directory
+ServerDirectory=examples

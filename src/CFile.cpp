@@ -11,7 +11,7 @@
 
 using namespace std;
 
-const char* CFile::HTML_UTF_8 = "text/html;charset=utf-8";
+const char * CFile::HTML_UTF_8 = "text/html;charset=utf-8";
 
 const char * CFile::HTML_HEADER = "<!DOCTYPE html>\n"
                                   "<html lang=\"en\">\n"

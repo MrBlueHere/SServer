@@ -223,9 +223,3 @@ std::string CServer::MapUriToPath(const std::string &rawUri) {
 
     return m_serverDirectory + uri;
 }
-
-void CServer::Shutdown() {
-    // todo
-
-    m_awaitingShutdown = true;
-}
