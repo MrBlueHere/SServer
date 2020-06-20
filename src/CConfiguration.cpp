@@ -94,7 +94,6 @@ void CConfiguration::SetConfigParam(const string &arg, string &val) {
             return;
         }
     }
-    // todo: validate
     else if (arg == "LogFormat") {
         m_logFormat = val;
         return;

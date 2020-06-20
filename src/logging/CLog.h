@@ -22,6 +22,7 @@ public:
     /// Formats the given message using the m_logFormat
     std::string GetFormatted(const std::string & format);
 private:
+    /// Looks for the key in the result and replaces it with val if found
     std::string FillVariable(std::string & result, const std::string & key, const std::string & val);
 
     /// Log Level
@@ -30,7 +31,7 @@ private:
     /// Message to be logged
     std::string m_message;
 
-    // Time of the log
+    /// Time of the log
     std::string m_time;
 };
 

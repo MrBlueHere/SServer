@@ -51,5 +51,8 @@ void CFile::SendHeaders(int code, int socket, const std::string& message, initia
 
     write(socket, buffer.c_str(), buffer.size());
 
-    m_logger->Info(buffer);
+    if (m_logger->m_headerOnly)
+        m_logger->Info(buffer.substr(0, buffer.find("\r\n")));
+    else
+        m_logger->Info(buffer);
 }

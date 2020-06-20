@@ -44,7 +44,7 @@ pair<int, string> CRequest::TryParseRequest(const string &rawRequest, bool * isV
 std::string CRequest::ToString(bool headOnly = false) {
    if (headOnly) {
        stringstream oss;
-       oss << m_method << " " << m_uri << " " << m_protocol << endl;
+       oss << m_method << " " << m_uri << " " << m_protocol;
        return oss.str();
    }
 

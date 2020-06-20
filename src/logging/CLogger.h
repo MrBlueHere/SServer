@@ -33,7 +33,7 @@ public:
     /// Should only the request and response header be writen
     bool m_headerOnly;
 
-private:
+protected:
     /// Checks whether the logger should log at this level
-    bool ShouldMessageGetLogged(LogLevel level);
+    bool ShouldMessageGetLogged(LogLevel level) const;
 };

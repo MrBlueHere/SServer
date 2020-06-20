@@ -15,7 +15,7 @@ const char * LogLevelToString(LogLevel type) {
         case Warn:
             return "Warn";
         case Error:
-            return "Info";
+            return "Error";
     }
     return "Info";
 }

@@ -28,6 +28,7 @@ public:
     /// Method for logging errors
     void Error(const std::string &) override;
 private:
+    /// Where to store logs
     std::string m_logFile;
 };
 

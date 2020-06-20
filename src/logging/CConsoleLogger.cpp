@@ -16,15 +16,18 @@ CConsoleLogger::CConsoleLogger(std::string logFormat, LogLevel level, bool heade
 
 void CConsoleLogger::Info(const string & text) {
     CLog log(text, LogLevel::Info);
-    cout << log.GetFormatted(m_logFormat) << endl;
+    if (ShouldMessageGetLogged(LogLevel::Info))
+        cout << log.GetFormatted(m_logFormat) << endl;
 }
 
 void CConsoleLogger::Warn(const string & text) {
     CLog log(text, LogLevel::Warn);
-    cout << log.GetFormatted(m_logFormat) << endl;
+    if (ShouldMessageGetLogged(LogLevel::Warn))
+        cout << log.GetFormatted(m_logFormat) << endl;
 }
 
 void CConsoleLogger::Error(const string & text) {
     CLog log(text, LogLevel::Error);
-    cout << log.GetFormatted(m_logFormat) << endl;
+    if (ShouldMessageGetLogged(LogLevel::Error))
+        cout << log.GetFormatted(m_logFormat) << endl;
 }
