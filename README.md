@@ -6,29 +6,41 @@ Author: Ladislav Floriš
 ## Original assignment
 HTTP server
 
-Úkolem je naprogramovat jednoduchý HTTP server s podporou různých generátorů obsahu. Generátor obsahu musí podporovat:
+The task is to program a simple HTTP server with support for various content generators. The content generator must support:
 
-1. výpis obsahu adresáře
-2. konkrétní html stránka (statický obsah)
-3. externí skript nebo program
+1. listing the contents of the directory
+2. specific html page (static content)
+3. an external script or program
 
-Server musí implementovat:
+The server must implement:
 
-1. načítání konfiguračního souboru
-2. parametry naslouchání na síti (IP adresa, m_port)
-3. omezení na práci s konkrétním adresářem
-4. log přenosů (kam se má ukládat, v jakém formátu, jak má vypadat hlavička každého záznamu, ...)
-5. vypnutí serveru na (konfigurovatelné) URL adrese
+1. loading the configuration file
+2. network listening parameters (IP address, m_port)
+3. Restrictions on working with a specific directory
+4. log of transmissions (where to save, in what format, what should the header of each record look like, ...)
+5. shut down the server at a (configurable) URL
 
-HTTP server může umět obsloužit více domén nebo poskytovat virtuální filesystém (mapování virtuálních URL na fyzické cesty na disku)
+HTTP server can be able to serve multiple domains or provide a virtual filesystem (mapping virtual URLs to physical disk paths)
 
-Volitelně: Podpora HTTPS (openssl), vícevláknové obsloužení klientů
+Optional: Support for HTTPS (openssl), multi-threaded client service
 
-Kde lze využít polymorfismus? (doporučené)
+Where can polymorphism be used? (recommended)
 
-- Druh souboru: adresář, HTML soubor, obrázek, skript, nepodporovaný formát, ...
-- Logování: na konzoli, do souboru, do databáze, ...
-- Styl logování: jednoduchá hlavička, kompletní požadavek (např. pouze pro chybové stavy), statistika přístupů, ...
+- File type: directory, HTML file, image, script, unsupported format, ...
+- Logging: on console, to file, to database, ...
+- Logging style: simple header, complete request (eg only for error states), access statistics, ...
+
+## Getting Started
+After cloning the repository, run ``` make ``` in terminal, which will generate the documentation and compile the source files.
+Then run the project using ``` make run ``` or call the generated binary directly, optionally passing a path to a
+config file as an argument.
+
+### Prerequisites
+
+- C++ 17
+- g++ verion 8 and higher
+- Running on Linux/Unix os only
+
 
 ## Specification
 I will create a Simple HTTP Server serving static files (html, images and other) as well as running executable scripts.
@@ -51,3 +63,7 @@ which implement logging to console and file respectively. `CServer` class instan
 based on the configuration. Logging methods are then used to log messages irrespective of the instantiated logger.
 There are 3 methods for logging `Info`, `Warn` and `Error`. All of them are pure virtual methods and they are implemented in 
 the derived logger classes.
+
+## Acknowledgments
+- [HTTP 1.1](https://www.w3.org/Protocols/rfc2616/rfc2616-sec4.html)
+- The basics, well explained in this [medium article](https://medium.com/from-the-scratch/http-server-what-do-you-need-to-know-to-build-a-simple-http-server-from-scratch-d1ef8945e4fa)

@@ -7,7 +7,7 @@ IPAddress=127.0.0.1
 UseIPv6=false
 
 # Configurable port
-Port=8080
+Port=8081
 
 # When this url is hit, server will shutdown
 ShutdownUrl=shutdown
@@ -22,7 +22,7 @@ LogType=Console
 LogLevel=Info
 
 # '@' is a wildcard, accepted variables: logLevel, message, time
-LogFormat=[@logLevel@] | @message@ | received:@time@
+LogFormat=[@logLevel@] | received:@time@ | @message@
 
 # Should only request and response header get logged or the whole
 HeaderOnly=false
