@@ -167,17 +167,17 @@ void CServer::HandleConnection(void * clientSocket) {
                     file = make_shared<CDirectory>(path, logger);
                 }
 
-                    // Executable file
+                // Executable file
                 else if (CExecutableScript::IsValidExecutableFile(path)) {
                     file = make_shared<CExecutableScript>(path, logger);
                 }
 
-                    // Regular static files (images, JS, CSS, ...)
+                // Regular static files (images, JS, CSS, ...)
                 else if (fs::is_regular_file(path)) {
                     file = make_shared<CStaticFile>(path, logger);
                 }
 
-                    // Unsupported
+                // Unsupported
                 else {
                     throw std::runtime_error("File type not supported");
                 }

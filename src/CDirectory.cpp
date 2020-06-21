@@ -25,7 +25,10 @@ void CDirectory::SendResponse(int socket) {
         if (string::npos != found)
             file = filePath.substr(found + 1, filePath.size());
         oss << "<body>";
-        oss << "<a href=\"" << "/" << file.c_str() << "\">" << file << "</a><br/>";
+        if (fs::is_directory(filePath))
+            oss << "<a href=\"" << file.c_str() << "/\">" << file << "</a><br/>";
+        else
+            oss << "<a href=\"" << file.c_str() << "\">" << file << "</a><br/>";
         oss << "</body>";
     }
     oss << CFile::HTML_FOOT;
