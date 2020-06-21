@@ -34,14 +34,14 @@ string testFileNotFound(struct sockaddr_in serverAddr) {
 
     char buffer[1024] = {0};
     const string msg = "GET /not_existing_path_98798 HTTP/1.1\r\n"
-                        "Host: localhost:8080\n"
-                        "Connection: keep-alive\n"
-                        "Pragma: no-cache\n"
-                        "Cache-Control: no-cache\n"
-                        "Upgrade-Insecure-Requests: 1\n"
-                        "User-Agent: Test\n"
-                        "Accept-Encoding: gzip, deflate, br\n"
-                        "Accept-Language: en-US,en;q=0.9";
+                       "Host: localhost:8080\n"
+                       "Connection: keep-alive\n"
+                       "Pragma: no-cache\n"
+                       "Cache-Control: no-cache\n"
+                       "Upgrade-Insecure-Requests: 1\n"
+                       "User-Agent: Test\n"
+                       "Accept-Encoding: gzip, deflate, br\n"
+                       "Accept-Language: en-US,en;q=0.9";
 
     send(sock, msg.c_str(), msg.size(), 0);
     read(sock , buffer, 1024);
@@ -64,14 +64,14 @@ string testInvalidVersion(struct sockaddr_in serverAddr) {
 
     char buffer[1024] = {0};
     const string msg = "GET / HTTP/1.0\r\n"
-                      "Host: localhost:8080\n"
-                      "Connection: keep-alive\n"
-                      "Pragma: no-cache\n"
-                      "Cache-Control: no-cache\n"
-                      "Upgrade-Insecure-Requests: 1\n"
-                      "User-Agent: Test\n"
-                      "Accept-Encoding: gzip, deflate, br\n"
-                      "Accept-Language: en-US,en;q=0.9";
+                       "Host: localhost:8080\n"
+                       "Connection: keep-alive\n"
+                       "Pragma: no-cache\n"
+                       "Cache-Control: no-cache\n"
+                       "Upgrade-Insecure-Requests: 1\n"
+                       "User-Agent: Test\n"
+                       "Accept-Encoding: gzip, deflate, br\n"
+                       "Accept-Language: en-US,en;q=0.9";
 
     send(sock, msg.c_str(), msg.size(), 0);
     read(sock , buffer, 1024);
@@ -95,14 +95,14 @@ string testInvalidRequest(struct sockaddr_in serverAddr) {
 
     char buffer[1024] = {0};
     const string msg = "GET HTTP/1.1\r\n"
-                      "Host: localhost:8080\n"
-                      "Connection: keep-alive\n"
-                      "Pragma: no-cache\n"
-                      "Cache-Control: no-cache\n"
-                      "Upgrade-Insecure-Requests: 1\n"
-                      "User-Agent: Test\n"
-                      "Accept-Encoding: gzip, deflate, br\n"
-                      "Accept-Language: en-US,en;q=0.9";
+                       "Host: localhost:8080\n"
+                       "Connection: keep-alive\n"
+                       "Pragma: no-cache\n"
+                       "Cache-Control: no-cache\n"
+                       "Upgrade-Insecure-Requests: 1\n"
+                       "User-Agent: Test\n"
+                       "Accept-Encoding: gzip, deflate, br\n"
+                       "Accept-Language: en-US,en;q=0.9";
 
     send(sock, msg.c_str(), msg.size(), 0);
     read(sock , buffer, 1024);
@@ -125,14 +125,14 @@ string testInvalidMethod(struct sockaddr_in serverAddr) {
 
     char buffer[1024] = {0};
     const string msg = "DELETE / HTTP/1.1\r\n"
-                      "Host: localhost:8080\n"
-                      "Connection: keep-alive\n"
-                      "Pragma: no-cache\n"
-                      "Cache-Control: no-cache\n"
-                      "Upgrade-Insecure-Requests: 1\n"
-                      "User-Agent: Test\n"
-                      "Accept-Encoding: gzip, deflate, br\n"
-                      "Accept-Language: en-US,en;q=0.9";
+                       "Host: localhost:8080\n"
+                       "Connection: keep-alive\n"
+                       "Pragma: no-cache\n"
+                       "Cache-Control: no-cache\n"
+                       "Upgrade-Insecure-Requests: 1\n"
+                       "User-Agent: Test\n"
+                       "Accept-Encoding: gzip, deflate, br\n"
+                       "Accept-Language: en-US,en;q=0.9";
 
     send(sock, msg.c_str(), msg.size(), 0);
     read(sock , buffer, 1024);
