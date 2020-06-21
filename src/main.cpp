@@ -21,15 +21,17 @@ int main(int argc, char **argv) {
             return 1;
         }
     }
-    // todo: uncomment
-    /*else {
+
+    else {
         cout << "Are you sure that you want to run the server with default settings?\n"
                 "yes/no" << endl;
         string response;
         cin >> response;
         if (response == "No" || response == "no" || response == "n" || response == "N")
             return 0;
-    }*/
+        else
+            cout << "Running" << endl;
+    }
 
     if (server.Startup(config))
         return server.Listen();

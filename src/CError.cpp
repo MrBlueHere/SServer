@@ -8,6 +8,7 @@
 #include <string>
 #include <iostream>
 #include <sstream>
+#include "csignal"
 
 using namespace std;
 
@@ -32,6 +33,8 @@ void CError::SendResponse(int socket) {
             << "</body>";
     output << CFile::HTML_FOOT;
 
+    // Ignore SIGPIPE signals in case someone closes the the socket
+    signal(SIGPIPE, SIG_IGN);
     write(socket, output.str().c_str(), output.str().size());
 }
 

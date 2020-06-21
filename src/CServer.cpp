@@ -147,49 +147,48 @@ void CServer::HandleConnection(void * clientSocket) {
 
     if (!isValid) {
         file = make_shared<CError>(parseResult.second, parseResult.first, logger);
-        file->SendResponse(socket);
-        close(socket);
-        return;
     }
 
     // Is a valid request, it's good to continue
-    try {
-        string path = MapUriToPath(request.m_uri);
+    else {
+        try {
+            string path = MapUriToPath(request.m_uri);
 
-        // Check if is shutdown uri
-        if (request.m_uri == m_shutdownUrl) {
-            file = make_shared<CShutdown>(logger);
-            m_awaitingShutdown = true;
-        }
-
-        else if (fs::exists(path)) {
-            // Directory, it's content should be returned
-            if (fs::is_directory(path)) {
-                // List directory
-                file = make_shared<CDirectory>(path, logger);
+            // Check if is shutdown uri
+            if (request.m_uri == m_shutdownUrl) {
+                file = make_shared<CShutdown>(logger);
+                m_awaitingShutdown = true;
             }
 
-            // Executable file
-            else if (CExecutableScript::IsValidExecutableFile(path)) {
-                file = make_shared<CExecutableScript>(path, logger);
-            }
+            else if (fs::exists(path)) {
+                // Directory, it's content should be returned
+                if (fs::is_directory(path)) {
+                    // List directory
+                    file = make_shared<CDirectory>(path, logger);
+                }
 
-            // Regular static files (images, JS, CSS, ...)
-            else if (fs::is_regular_file(path)) {
-                file = make_shared<CStaticFile>(path, logger);
-            }
+                    // Executable file
+                else if (CExecutableScript::IsValidExecutableFile(path)) {
+                    file = make_shared<CExecutableScript>(path, logger);
+                }
 
-            // Unsupported
+                    // Regular static files (images, JS, CSS, ...)
+                else if (fs::is_regular_file(path)) {
+                    file = make_shared<CStaticFile>(path, logger);
+                }
+
+                    // Unsupported
+                else {
+                    throw std::runtime_error("File type not supported");
+                }
+            }
             else {
-                throw std::runtime_error("File type not supported");
+                throw std::runtime_error("File not found");
             }
         }
-        else {
-            throw std::runtime_error("File not found");
+        catch (exception & e) {
+            file = make_shared<CError>(e.what(), 404, logger);
         }
-    }
-    catch (exception & e) {
-        file = make_shared<CError>(e.what(), 404, logger);
     }
 
     file->SendResponse(socket);

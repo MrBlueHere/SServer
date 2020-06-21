@@ -13,10 +13,17 @@ using namespace std;
 
 
 pair<int, string> CRequest::TryParseRequest(const string &rawRequest, bool * isValid) noexcept {
-    istringstream stream;
-    stream.str(rawRequest);
+    size_t lineEnd = rawRequest.find("\r\n");
+    if (lineEnd == string::npos)
+    {
+        *isValid = false;
+        return pair<int, string>(400, "Invalid Request");
+    }
 
-    if (!(stream >> m_method >> m_uri >> m_protocol)) {
+    istringstream stream;
+    stream.str(rawRequest.substr(0, lineEnd));
+
+    if (!(stream >> m_method >> m_uri >> m_protocol) || m_method.empty() || m_uri.empty() || m_protocol.empty()) {
         *isValid = false;
         return pair<int, string>(400, "Invalid Request");
     }

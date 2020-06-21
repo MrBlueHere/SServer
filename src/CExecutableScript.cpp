@@ -7,6 +7,7 @@
 #include "CError.h"
 #include <sys/stat.h>
 #include <unistd.h>
+#include "csignal"
 
 using namespace std;
 
@@ -49,7 +50,6 @@ string CExecutableScript::TryExecute(bool * success) {
     }
     catch(exception & e) {
         pclose(exec);
-        // Todo: CLog
         *success = false;
         return e.what();
     }
@@ -84,5 +84,7 @@ void CExecutableScript::SendSuccessResponse(int socket, const string &fileResult
             {"Content-Length", to_string(size)}
     }, false);
 
+    // Ignore SIGPIPE signals in case someone closes the the socket
+    signal(SIGPIPE, SIG_IGN);
     write(socket, fileResult.c_str(), size);
 }
