@@ -10,7 +10,7 @@ UseIPv6=false
 Port=8081
 
 # When this url is hit, server will shutdown
-ShutdownUrl=shutdown
+ShutdownUrl=/shutdown
 
 # Max amount of queued connections before server starts refusing them
 MaxConnections=10
