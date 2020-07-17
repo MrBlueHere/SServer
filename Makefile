@@ -1,7 +1,7 @@
 PHONY: all doc clean compile run
 .DEFAULT_GOAL := all
 
-USERNAME=florilad
+PROJECTNAME=sserver
 TESTEXEC=tests
 CXX=g++
 CXXFLAGS = -std=c++17 -O0 -Wall -Werror -pedantic -g
@@ -23,7 +23,7 @@ clean: cleanTests
 	@echo "Cleaning..."
 	@rm -rf -- src/*.o src/*/*.o src/*/*/*.o src/*/*/*/*.o
 	@rm -rf -- src/*.d src/*/*.d src/*/*/*.d src/*/*/*/*.d
-	@rm -rf $(USERNAME)
+	@rm -rf $(PROJECTNAME)
 	@rm -rf doc
 
 cleanTests:
@@ -34,14 +34,14 @@ cleanTests:
 
 compile: $(SOURCES:.cpp=.o)
 	@echo "Compiling ..."
-	${CXX} ${CXXFLAGS} -o ${USERNAME} ${SOURCES:.cpp=.o} ${LDLIBS}
+	${CXX} ${CXXFLAGS} -o ${PROJECTNAME} ${SOURCES:.cpp=.o} ${LDLIBS}
 
 compileTests: $(TESTS:.cpp=.o)
 	@echo "Compiling tests..."
 	${CXX} ${CXXFLAGS} -o ${TESTEXEC} ${TESTS:.cpp=.o} ${LDLIBS}
 
 run: compile
-	@./$(USERNAME)
+	@./$(PROJECTNAME)
 
 runTests: compile compileTests
-	@./$(USERNAME) & ./$(TESTEXEC)
+	@./$(PROJECTNAME) & ./$(TESTEXEC)
